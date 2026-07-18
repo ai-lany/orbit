@@ -1,0 +1,72 @@
+.card {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.name {
+  font-weight: var(--weight-semibold);
+}
+
+.body {
+  padding-top: 0;
+}
+
+.content {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.media {
+  margin-top: var(--space-1);
+}
+
+.singleImage {
+  display: block;
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-muted);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.likeIcon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.likeIcon[data-liked] {
+  color: var(--color-danger);
+}

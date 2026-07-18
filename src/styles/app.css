@@ -1,0 +1,18 @@
+/*
+ * Global page styles for the Orbit demo shell only.
+ * Component styling lives in each component's *.module.css and uses design-system
+ * semantic tokens exclusively. Nothing here is part of the component library.
+ */
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+}
