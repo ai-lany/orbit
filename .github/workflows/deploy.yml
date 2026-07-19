@@ -1,0 +1,71 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      # orbit consumes the design system via `file:../Design-System`, so both
+      # repos are checked out as siblings under the workspace and the design
+      # system is built first for the link to resolve.
+      - name: Checkout orbit
+        uses: actions/checkout@v4
+        with:
+          path: orbit
+
+      - name: Checkout design system
+        uses: actions/checkout@v4
+        with:
+          repository: ai-lany/Design-System
+          ref: master
+          path: Design-System
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            orbit/package-lock.json
+            Design-System/package-lock.json
+
+      - name: Build design system (linked dependency)
+        working-directory: Design-System
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build orbit
+        working-directory: orbit
+        run: |
+          npm ci
+          npm run build
+
+      # GitHub Pages has no server-side routing; serve the SPA for unknown
+      # paths so deep links like /orbit/profile work on reload.
+      - name: SPA fallback for client-side routes
+        run: cp orbit/dist/index.html orbit/dist/404.html
+
+      - uses: actions/configure-pages@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: orbit/dist
+
+      - uses: actions/deploy-pages@v4
+        id: deployment

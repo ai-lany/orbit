@@ -25,3 +25,20 @@ npm run dev        # open the demo page
 ```
 
 See [CLAUDE.md](./CLAUDE.md) for conventions and the full command list.
+
+## Deployment
+
+Every push to `main` builds the app and deploys it to GitHub Pages at
+`https://ai-lany.github.io/orbit/` via `.github/workflows/deploy.yml`. Because the
+design system is a local `file:` dependency, the workflow checks out
+[`ai-lany/Design-System`](https://github.com/ai-lany/Design-System) alongside this repo
+and builds it first, then builds orbit and publishes `dist/`.
+
+**One-time setup:** in the repo's **Settings → Pages**, set **Source** to
+**GitHub Actions**. You can also run the workflow manually from the **Actions** tab.
+
+Notes:
+- `vite.config.ts` sets `base: '/orbit/'` for production builds (dev stays at `/`), and
+  the router uses that base, so client-side routes resolve under the Pages subpath.
+- The workflow copies `index.html` to `404.html` so deep links (e.g. `/orbit/profile`)
+  work on reload — GitHub Pages has no server-side routing.

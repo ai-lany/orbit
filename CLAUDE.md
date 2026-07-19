@@ -20,6 +20,16 @@ npm run preview      # preview the production build
 
 There are no tests and no lint script.
 
+## Deployment (GitHub Pages)
+
+`.github/workflows/deploy.yml` deploys to Pages on every push to `main`. Since the
+design system is a `file:../Design-System` dependency, the workflow checks out
+`ai-lany/Design-System` (master) as a sibling and builds it before building orbit.
+`vite.config.ts` uses `base: '/orbit/'` for production only (dev stays at `/`), the
+router's `basename` follows `import.meta.env.BASE_URL`, and the workflow copies
+`index.html` → `404.html` as an SPA fallback for client-side routes. One-time: set
+**Settings → Pages → Source** to **GitHub Actions**.
+
 ## Design-system dependency
 
 The design system is consumed as a local file link: `"@your-org/design-system":

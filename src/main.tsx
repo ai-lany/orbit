@@ -11,9 +11,13 @@ import { App } from './App';
 const container = document.getElementById('root');
 if (!container) throw new Error('Root element #root not found');
 
+// Matches Vite's `base` so routing works under the GitHub Pages subpath (/orbit/)
+// in production and at "/" during local dev.
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </StrictMode>,
