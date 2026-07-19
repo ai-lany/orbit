@@ -6,12 +6,13 @@ Guidance for working in the `orbit` repo.
 
 `orbit` will become a social media app. Right now it hosts a small set of **reusable
 React components** for that app, built on top of the sibling design system
-`@your-org/design-system` (repo at `../Design-System`), plus a runnable demo page.
+`@your-org/design-system` (repo at `../Design-System`), wired together into a small
+runnable app (Home + Profile routes).
 
 ## Commands
 
 ```bash
-npm run dev          # Vite dev server (demo page at src/App.tsx)
+npm run dev          # Vite dev server (app routes: / and /profile)
 npm run build        # tsc --noEmit then vite build
 npm run typecheck    # tsc --noEmit (strict — must pass before pushing)
 npm run preview      # preview the production build
@@ -61,3 +62,18 @@ Shared domain types live in `src/types.ts`. The public API is re-exported from `
   single image or nested `PhotoGrid`, and like/comment/share actions.
 - `Feed` — vertical list of `PostCard`s with loading skeletons, empty state, and load-more.
 - `ProfileHeader` — cover, avatar, name/handle/verified, bio, stat row, and section tabs.
+- `PostComposer` — avatar + textarea + Post button with a character counter.
+
+## App structure (demo shell around the components)
+
+The reusable components above live in `src/components/`. The runnable app that wires
+them together is intentionally separate:
+
+- `src/app/AppState.tsx` — a small React context holding demo state (`user`, `posts`,
+  `theme`) and actions (`toggleLike`, `toggleFollow`, `addPost`). Use `useAppState()`.
+- `src/app/Layout.tsx` — the nav shell (brand, Home/Profile `NavLink`s, dark toggle) with
+  a router `<Outlet />`. Dark mode is set via `data-theme` on the shell root.
+- `src/pages/` — `HomePage` (composer + feed) and `ProfilePage` (header + tab-filtered feed).
+- `src/App.tsx` — the route table; `src/main.tsx` wraps it in `<BrowserRouter>`.
+
+Routing uses `react-router-dom` v6. Mock demo data lives in `src/mock/data.ts`.

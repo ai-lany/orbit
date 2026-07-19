@@ -3,8 +3,8 @@
 Social media app — early work in progress.
 
 Right now this repo contains a small set of reusable React components for the app,
-built on top of the [`@your-org/design-system`](../Design-System) library, plus a
-runnable demo page.
+built on top of the [`@your-org/design-system`](../Design-System) library, wired into a
+small runnable app with **Home** and **Profile** routes.
 
 ## Components
 
@@ -12,6 +12,7 @@ runnable demo page.
 - **PostCard** — a single post (author, body, media, like/comment/share).
 - **Feed** — a vertical list of posts with loading and empty states.
 - **ProfileHeader** — profile cover, avatar, stats, and section tabs.
+- **PostComposer** — avatar + textarea + Post button for writing a new post.
 
 ## Getting started
 

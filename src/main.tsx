@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 
 // Design-system tokens, reset, fonts, and component styles — imported once.
 import '@your-org/design-system/dist/index.css';
@@ -12,6 +13,8 @@ if (!container) throw new Error('Root element #root not found');
 
 createRoot(container).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StrictMode>,
 );
