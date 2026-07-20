@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en" data-view="visitor" data-audience="stranger">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbit — Profile mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — copied from @your-org/design-system tokens.css
+   ════════════════════════════════════════════════════════════════════ */
+:root {
+  --gray-0:#ffffff; --gray-50:#fafafa; --gray-100:#f4f4f4; --gray-200:#e8e8e8;
+  --gray-300:#d1d1d1; --gray-400:#a0a0a0; --gray-500:#717171; --gray-600:#525252;
+  --gray-700:#383838; --gray-800:#202020; --gray-900:#111111; --gray-1000:#080808;
+
+  --accent-50:#f0eeff; --accent-100:#e4dfff; --accent-200:#c8bffe; --accent-300:#ac9ffd;
+  --accent-400:#9180fb; --accent-500:#7b61ff; --accent-600:#6449e5; --accent-700:#4e33c4;
+  --accent-800:#381fa3; --accent-900:#220b7f;
+
+  --red-100:#fde2e1; --red-500:#e73128; --red-700:#8c2620;
+  --green-100:#d6f0dc; --green-500:#2ed44a; --green-700:#1a6629;
+  --amber-100:#fbebc6; --amber-500:#f0a51b; --amber-700:#7a4a04;
+  --lime-100:#f4fbd3; --lime-500:#d4f951; --lime-700:#3a4a06;
+  --pink-100:#ffe6f6; --pink-500:#ff5ecb; --pink-700:#8a0a5c;
+
+  --color-overlay:color-mix(in srgb, var(--gray-1000) 50%, transparent);
+  --color-bg:var(--gray-0); --color-bg-subtle:var(--gray-50); --color-bg-muted:var(--gray-100);
+  --color-bg-inverse:var(--gray-900);
+  --color-fg:var(--gray-900); --color-fg-muted:var(--gray-600); --color-fg-subtle:var(--gray-500);
+  --color-fg-inverse:var(--gray-0); --color-fg-on-accent:var(--gray-0);
+  --color-border:var(--gray-200); --color-border-strong:var(--gray-300);
+  --color-border-focus:var(--accent-500);
+  --color-accent:var(--accent-500); --color-accent-hover:var(--accent-600);
+  --color-accent-active:var(--accent-700); --color-accent-subtle:var(--accent-50);
+  --color-danger:var(--red-500); --color-danger-hover:var(--red-700);
+  --color-success:var(--green-500); --color-warning:var(--amber-500);
+  --color-danger-subtle:var(--red-100); --color-success-subtle:var(--green-100);
+  --color-warning-subtle:var(--amber-100);
+  --color-danger-fg:var(--red-700); --color-success-fg:var(--green-700); --color-warning-fg:var(--amber-700);
+  --color-fg-on-vivid-fill:var(--gray-900);
+  --color-signal-lime:var(--lime-500); --color-signal-lime-fg:var(--lime-700); --color-signal-lime-subtle:var(--lime-100);
+  --color-signal-pink:var(--pink-500); --color-signal-pink-fg:var(--pink-700); --color-signal-pink-subtle:var(--pink-100);
+
+  --space-1:0.25rem; --space-2:0.5rem; --space-3:0.75rem; --space-4:1rem;
+  --space-5:1.5rem; --space-6:2rem; --space-7:3rem; --space-8:4rem;
+
+  --radius-sm:4px; --radius-md:6px; --radius-lg:8px; --radius-xl:16px; --radius-full:9999px;
+
+  --font-sans:"Funnel Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-display:"Funnel Display",ui-sans-serif,system-ui,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+
+  --text-xs:0.75rem; --text-sm:0.875rem; --text-base:1rem; --text-lg:1.125rem;
+  --text-xl:1.25rem; --text-2xl:1.5rem; --text-3xl:2rem;
+  --leading-tight:1.2; --leading-normal:1.5; --leading-loose:1.7;
+  --weight-regular:400; --weight-medium:500; --weight-semibold:600; --weight-bold:700;
+
+  --shadow-sm:0 1px 3px rgba(15,14,28,.08),0 1px 2px rgba(15,14,28,.04);
+  --shadow-md:0 4px 14px -2px rgba(15,14,28,.12),0 2px 4px rgba(15,14,28,.05);
+  --shadow-lg:0 20px 48px -8px rgba(15,14,28,.18),0 6px 12px rgba(15,14,28,.08);
+  --shadow-focus:0 0 0 3px color-mix(in srgb, var(--color-accent) 30%, transparent);
+
+  --duration-fast:100ms; --duration-base:150ms; --duration-slow:220ms;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-in-out:cubic-bezier(.65,0,.35,1);
+  --control-height-sm:28px; --control-height-md:36px; --control-height-lg:44px;
+  --z-dropdown:100; --z-sticky:200; --z-overlay:300; --z-modal:400; --z-toast:9000;
+
+  --sticky-yellow-bg:#fef9c3; --sticky-yellow-fg:#713f12;
+  --sticky-green-bg:#dcfce7;  --sticky-green-fg:#14532d;
+  --sticky-pink-bg:#fce7f3;   --sticky-pink-fg:#831843;
+  --sticky-blue-bg:#dbeafe;   --sticky-blue-fg:#1e3a5f;
+  --sticky-purple-bg:#ede9fe; --sticky-purple-fg:#3b0764;
+}
+
+[data-theme="dark"] {
+  --color-bg:var(--gray-900); --color-bg-subtle:var(--gray-800); --color-bg-muted:var(--gray-700);
+  --color-bg-inverse:var(--gray-50);
+  --color-fg:var(--gray-50); --color-fg-muted:var(--gray-300); --color-fg-subtle:var(--gray-400);
+  --color-fg-inverse:var(--gray-900);
+  --color-border:var(--gray-700); --color-border-strong:var(--gray-600);
+  --color-accent:var(--accent-400); --color-accent-hover:var(--accent-300);
+  --color-accent-active:var(--accent-200);
+  --color-accent-subtle:color-mix(in srgb, var(--accent-500) 16%, var(--gray-900));
+  --color-danger-hover:color-mix(in srgb, var(--red-500) 80%, white);
+  --color-danger-subtle:color-mix(in srgb, var(--red-500) 18%, var(--gray-900));
+  --color-success-subtle:color-mix(in srgb, var(--green-500) 18%, var(--gray-900));
+  --color-warning-subtle:color-mix(in srgb, var(--amber-500) 18%, var(--gray-900));
+  --color-danger-fg:var(--red-500); --color-success-fg:var(--green-500); --color-warning-fg:var(--amber-500);
+  --color-signal-lime-fg:var(--lime-500);
+  --color-signal-lime-subtle:color-mix(in srgb, var(--lime-500) 18%, var(--gray-900));
+  --color-signal-pink-fg:var(--pink-500);
+  --color-signal-pink-subtle:color-mix(in srgb, var(--pink-500) 20%, var(--gray-900));
+  --shadow-sm:0 1px 3px rgba(0,0,0,.4);
+  --shadow-md:0 4px 14px -2px rgba(0,0,0,.5);
+  --shadow-lg:0 20px 48px -8px rgba(0,0,0,.65);
+  --sticky-yellow-bg:#3d3412; --sticky-yellow-fg:#fef08a;
+  --sticky-green-bg:#14311c;  --sticky-green-fg:#86efac;
+  --sticky-pink-bg:#3d1028;   --sticky-pink-fg:#f9a8d4;
+  --sticky-blue-bg:#0f2544;   --sticky-blue-fg:#93c5fd;
+  --sticky-purple-bg:#1e0a3d; --sticky-purple-fg:#c4b5fd;
+}
+
+/* ════════════════════ Base ════════════════════ */
+*,*::before,*::after { box-sizing:border-box; }
+html,body { margin:0; padding:0; }
+body {
+  font-family:var(--font-sans);
+  font-size:var(--text-base);
+  line-height:var(--leading-normal);
+  background:var(--color-bg-subtle);
+  color:var(--color-fg);
+  -webkit-font-smoothing:antialiased;
+  transition:background-color var(--duration-slow) var(--ease-out);
+}
+button { font-family:inherit; cursor:pointer; }
+img { display:block; max-width:100%; }
+
+/* Pixel glyphs (PixelMark) */
+.px { display:inline-block; flex-shrink:0; image-rendering:pixelated; }
+.px svg { display:block; width:100%; height:100%; shape-rendering:crispEdges; }
+
+/* ════════════════════ Design-system component recreations ════════════════════ */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:var(--space-2);
+  font-weight:var(--weight-medium); line-height:1; white-space:nowrap;
+  border:1px solid transparent; border-radius:var(--radius-sm);
+  height:var(--control-height-md); padding:0 var(--space-4); font-size:var(--text-sm);
+  transition:background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+  user-select:none;
+}
+.btn:active { transform:scale(.98); }
+.btn:focus-visible { outline:none; box-shadow:var(--shadow-focus); }
+.btn[data-size='sm'] { height:var(--control-height-sm); padding:0 var(--space-3); }
+.btn[data-variant='primary'] { background:var(--color-accent); color:var(--color-fg-on-accent); }
+.btn[data-variant='primary']:hover { background:var(--color-accent-hover); }
+.btn[data-variant='secondary'] { background:var(--color-bg-muted); color:var(--color-fg); }
+.btn[data-variant='secondary']:hover { background:var(--color-bg-muted); filter:brightness(.97); }
+[data-theme="dark"] .btn[data-variant='secondary']:hover { filter:brightness(1.12); }
+.btn[data-variant='ghost'] { background:transparent; color:var(--color-fg); }
+.btn[data-variant='ghost']:hover { background:var(--color-bg-muted); }
+
+.badge {
+  display:inline-flex; align-items:center; gap:var(--space-1);
+  font-weight:var(--weight-medium); line-height:1; white-space:nowrap;
+  border:1px solid transparent; border-radius:var(--radius-full);
+  font-size:var(--text-xs); padding:3px var(--space-2);
+}
+.badge[data-tone='accent']  { background:var(--color-accent-subtle); color:var(--color-accent); }
+.badge[data-tone='neutral'] { background:var(--color-bg-muted); color:var(--color-fg); }
+.badge[data-tone='pink']    { background:var(--color-signal-pink-subtle); color:var(--color-signal-pink-fg); }
+.badge[data-tone='lime']    { background:var(--color-signal-lime-subtle); color:var(--color-signal-lime-fg); }
+.badge[data-tone='warning'] { background:var(--color-warning-subtle); color:var(--color-warning-fg); }
+.badge[data-variant='outline'] { background:transparent; }
+.badge[data-variant='outline'][data-tone='neutral'] { border-color:var(--color-border-strong); color:var(--color-fg-muted); }
+
+.chip {
+  display:inline-flex; align-items:center; gap:var(--space-1);
+  font-size:var(--text-xs); font-weight:var(--weight-medium); line-height:1; white-space:nowrap;
+  padding:4px var(--space-2); border-radius:var(--radius-full);
+  border:1px solid var(--color-border); background:var(--color-bg-muted); color:var(--color-fg);
+}
+
+.card {
+  background:var(--color-bg); border:1px solid var(--color-border);
+  border-radius:var(--radius-lg); color:var(--color-fg);
+  transition:box-shadow var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out);
+}
+
+.avatar {
+  position:relative; display:inline-flex; align-items:center; justify-content:center;
+  border-radius:var(--radius-full); font-weight:var(--weight-medium);
+  user-select:none; flex-shrink:0; color:var(--color-fg-on-accent);
+}
+.avatar[data-size='sm'] { width:24px; height:24px; font-size:10px; }
+.avatar[data-size='md'] { width:32px; height:32px; font-size:12px; }
+.avatar[data-size='lg'] { width:40px; height:40px; font-size:14px; }
+.avatar[data-size='xl'] { width:96px; height:96px; font-size:28px; }
+.avatar[data-hue='purple'] { background:linear-gradient(135deg,var(--accent-400),var(--accent-700)); }
+.avatar[data-hue='pink']   { background:linear-gradient(135deg,var(--pink-500),var(--accent-600)); }
+.avatar[data-hue='lime']   { background:linear-gradient(135deg,var(--lime-500),var(--green-500)); color:var(--gray-900); }
+.avatar[data-hue='amber']  { background:linear-gradient(135deg,var(--amber-500),var(--pink-500)); }
+.avatar[data-hue='blue']   { background:linear-gradient(135deg,#60a5fa,var(--accent-500)); }
+.avatar[data-hue='slate']  { background:linear-gradient(135deg,var(--gray-500),var(--gray-700)); }
+
+.tabs { display:flex; align-items:center; gap:var(--space-1); border-bottom:1px solid var(--color-border); }
+.tab {
+  position:relative; display:inline-flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-2) var(--space-3); font-size:var(--text-sm); font-weight:var(--weight-medium);
+  color:var(--color-fg-muted); border-radius:var(--radius-md) var(--radius-md) 0 0;
+  background:transparent; border:none; white-space:nowrap; margin-bottom:-1px;
+  transition:color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+.tab::after {
+  content:''; position:absolute; bottom:0; left:var(--space-3); right:var(--space-3);
+  height:2px; background:transparent; border-radius:var(--radius-full);
+  transition:background-color var(--duration-fast) var(--ease-out);
+}
+.tab:hover { color:var(--color-fg); background:var(--color-bg-subtle); }
+.tab[data-selected] { color:var(--color-accent); }
+.tab[data-selected]::after { background:var(--color-accent); }
+
+/* Segmented control (demo chrome) */
+.seg {
+  display:inline-flex; gap:2px; padding:3px; border-radius:var(--radius-md);
+  background:var(--color-bg-muted); border:1px solid var(--color-border);
+}
+.seg button {
+  border:none; background:transparent; color:var(--color-fg-muted);
+  font-size:var(--text-xs); font-weight:var(--weight-medium); line-height:1;
+  padding:6px 10px; border-radius:var(--radius-sm);
+  transition:all var(--duration-fast) var(--ease-out); display:inline-flex; align-items:center; gap:6px;
+}
+.seg button:hover { color:var(--color-fg); }
+.seg button[data-selected] { background:var(--color-bg); color:var(--color-fg); box-shadow:var(--shadow-sm); }
+
+/* ════════════════════ Demo chrome ════════════════════ */
+.demo-bar {
+  position:sticky; top:0; z-index:var(--z-sticky);
+  display:flex; align-items:center; gap:var(--space-4); flex-wrap:wrap;
+  padding:var(--space-2) var(--space-4);
+  background:color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--color-border);
+}
+.demo-bar .label {
+  font-size:var(--text-xs); font-weight:var(--weight-semibold); color:var(--color-fg-subtle);
+  text-transform:uppercase; letter-spacing:.08em;
+}
+.demo-group { display:inline-flex; align-items:center; gap:var(--space-2); }
+.demo-spacer { flex:1; }
+#audienceGroup { display:none; }
+[data-view='visitor'] #audienceGroup { display:inline-flex; }
+
+/* ════════════════════ App nav ════════════════════ */
+.appnav {
+  background:var(--color-bg); border-bottom:1px solid var(--color-border);
+}
+.appnav-inner {
+  max-width:1120px; margin:0 auto; padding:var(--space-3) var(--space-5);
+  display:flex; align-items:center; gap:var(--space-5);
+}
+.brand { display:inline-flex; align-items:center; gap:var(--space-2); color:var(--color-fg); text-decoration:none; }
+.brand .px { color:var(--color-accent); }
+.brand-name { font-family:var(--font-display); font-weight:var(--weight-bold); font-size:var(--text-xl); letter-spacing:-0.01em; }
+.appnav-links { display:flex; gap:var(--space-1); flex:1; }
+.appnav-links a {
+  text-decoration:none; color:var(--color-fg-muted); font-size:var(--text-sm); font-weight:var(--weight-medium);
+  padding:var(--space-2) var(--space-3); border-radius:var(--radius-md);
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.appnav-links a:hover { color:var(--color-fg); background:var(--color-bg-subtle); }
+.appnav-links a[data-active] { color:var(--color-accent); background:var(--color-accent-subtle); }
+.icon-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:var(--control-height-md); height:var(--control-height-md);
+  border-radius:var(--radius-sm); border:1px solid var(--color-border);
+  background:var(--color-bg); color:var(--color-fg-muted);
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.icon-btn:hover { color:var(--color-fg); border-color:var(--color-border-strong); background:var(--color-bg-subtle); }
+#themeToggle .moon { display:none; }
+[data-theme='dark'] #themeToggle .sun { display:none; }
+[data-theme='dark'] #themeToggle .moon { display:block; }
+
+/* ════════════════════ Edit toolbar ════════════════════ */
+.edit-toolbar {
+  display:none; position:sticky; top:53px; z-index:calc(var(--z-sticky) - 1);
+  background:var(--color-accent-subtle);
+  border-bottom:1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+[data-view='edit'] .edit-toolbar { display:block; }
+.edit-toolbar-inner {
+  max-width:1120px; margin:0 auto; padding:var(--space-2) var(--space-5);
+  display:flex; align-items:center; gap:var(--space-4); flex-wrap:wrap;
+}
+.edit-toolbar .title {
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  font-size:var(--text-sm); font-weight:var(--weight-semibold); color:var(--color-accent);
+}
+.edit-toolbar .hint { font-size:var(--text-xs); color:var(--color-fg-muted); }
+.theme-swatches { display:inline-flex; align-items:center; gap:var(--space-2); }
+.swatch {
+  position:relative; width:26px; height:26px; border-radius:var(--radius-full);
+  border:2px solid var(--color-bg); box-shadow:0 0 0 1px var(--color-border-strong);
+  padding:0; transition:transform var(--duration-fast) var(--ease-out);
+}
+.swatch:hover { transform:scale(1.12); }
+.swatch[data-selected] { box-shadow:0 0 0 2px var(--color-accent); }
+.swatch .lock {
+  position:absolute; right:-4px; bottom:-4px; width:14px; height:14px;
+  background:var(--color-fg); color:var(--color-bg); border-radius:var(--radius-full);
+  font-size:8px; display:flex; align-items:center; justify-content:center;
+}
+
+/* ════════════════════ Page layout ════════════════════ */
+.page { max-width:1120px; margin:0 auto; padding:var(--space-5); display:flex; flex-direction:column; gap:var(--space-5); }
+.columns { display:grid; grid-template-columns:340px 1fr; gap:var(--space-5); align-items:start; }
+.col { display:flex; flex-direction:column; gap:var(--space-5); min-width:0; }
+@media (max-width:840px) {
+  .columns { grid-template-columns:1fr; }
+  .page { padding:var(--space-4); }
+}
+
+/* Audience hint (demo affordance) */
+.aud-hint {
+  display:none; align-items:center; gap:var(--space-2);
+  font-size:var(--text-xs); color:var(--color-fg-muted);
+  padding:var(--space-2) var(--space-3);
+  border:1px dashed var(--color-border-strong); border-radius:var(--radius-md);
+  background:var(--color-bg);
+}
+[data-view='visitor'] .aud-hint { display:flex; }
+
+/* ════════════════════ Visibility rules (PRD: per-block, server-enforced) ════════════════════ */
+[data-view='visitor'][data-audience='stranger'] [data-vis='followers'],
+[data-view='visitor'][data-audience='stranger'] [data-vis='friends'],
+[data-view='visitor'][data-audience='follower'] [data-vis='friends'] { display:none; }
+[data-view='visitor'][data-audience='stranger'] .friends-only-post,
+[data-view='visitor'][data-audience='follower'] .friends-only-post { display:none; }
+
+/* Role-scoped elements */
+.owner-only { display:none; }
+[data-view='owner'] .owner-only, [data-view='edit'] .owner-only { display:inline-flex; }
+.visitor-actions { display:none; }
+[data-view='visitor'] .visitor-actions { display:flex; }
+.owner-actions { display:none; }
+[data-view='owner'] .owner-actions { display:flex; }
+[data-view='edit'] .owner-actions { display:flex; }
+/* Follow button variants per audience */
+.aud-el { display:none !important; }
+[data-view='visitor'][data-audience='stranger'] .aud-stranger,
+[data-view='visitor'][data-audience='follower'] .aud-follower,
+[data-view='visitor'][data-audience='mutual']   .aud-mutual { display:inline-flex !important; }
+/* Guestbook composer: mutual friends only */
+.gb-composer { display:none; }
+[data-view='visitor'][data-audience='mutual'] .gb-composer { display:grid; }
+.gb-locked { display:flex; }
+[data-view='visitor'][data-audience='mutual'] .gb-locked,
+[data-view='owner'] .gb-locked, [data-view='edit'] .gb-locked { display:none; }
+
+/* ════════════════════ Profile header ════════════════════ */
+.profile-header { overflow:hidden; }
+.cover {
+  position:relative; height:180px;
+  background:
+    radial-gradient(ellipse 60% 120% at 85% 20%, color-mix(in srgb, var(--pink-500) 30%, transparent), transparent 60%),
+    radial-gradient(ellipse 50% 100% at 15% 80%, color-mix(in srgb, var(--lime-500) 22%, transparent), transparent 55%),
+    linear-gradient(120deg, var(--color-accent-subtle), color-mix(in srgb, var(--accent-500) 32%, var(--color-bg-muted)));
+}
+.cover .px { position:absolute; opacity:.75; }
+.cover .px.s1 { top:26px; right:64px; color:var(--color-accent); }
+.cover .px.s2 { top:70px; right:130px; color:var(--pink-500); opacity:.55; }
+.cover .px.s3 { top:110px; right:40px; color:var(--lime-500); opacity:.6; }
+.profile-body { position:relative; display:flex; flex-direction:column; gap:var(--space-3); padding:0 var(--space-5) var(--space-5); }
+.top-row { display:flex; align-items:flex-end; justify-content:space-between; gap:var(--space-3); flex-wrap:wrap; }
+.profile-avatar { margin-top:-36px; border:4px solid var(--color-bg); box-shadow:var(--shadow-sm); }
+.header-actions { display:flex; gap:var(--space-2); padding-top:var(--space-3); align-items:center; }
+.identity { display:flex; flex-direction:column; gap:2px; }
+.name-row { display:inline-flex; align-items:center; gap:var(--space-2); flex-wrap:wrap; }
+.display-name { margin:0; font-family:var(--font-display); font-size:var(--text-2xl); font-weight:var(--weight-bold); line-height:var(--leading-tight); letter-spacing:-0.01em; }
+.handle { font-size:var(--text-sm); color:var(--color-fg-muted); }
+.handle .fyou { margin-left:var(--space-2); }
+.bio-line { margin:0; font-size:var(--text-sm); color:var(--color-fg); max-width:62ch; }
+.stats-row { display:flex; gap:var(--space-5); padding-top:var(--space-1); flex-wrap:wrap; }
+.stat { display:flex; flex-direction:column; gap:1px; }
+.stat .value { font-family:var(--font-display); font-size:var(--text-lg); font-weight:var(--weight-bold); line-height:var(--leading-tight); }
+.stat .label { font-size:var(--text-xs); color:var(--color-fg-subtle); display:inline-flex; align-items:center; gap:4px; }
+.stat .label .dot { width:6px; height:6px; border-radius:1px; background:var(--color-signal-pink); display:inline-block; }
+
+/* ════════════════════ Blocks ════════════════════ */
+.block { position:relative; }
+.block-head {
+  display:flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-4) var(--space-5); border-bottom:1px solid var(--color-border);
+}
+.block-title {
+  margin:0; font-family:var(--font-display); font-size:var(--text-base);
+  font-weight:var(--weight-semibold); letter-spacing:-0.005em; display:inline-flex; align-items:center; gap:var(--space-2);
+}
+.block-title .px { color:var(--color-accent); }
+.block-body { padding:var(--space-4) var(--space-5) var(--space-5); }
+.vis-badge { margin-left:auto; }
+[data-view='visitor'] .vis-badge { display:none; }
+
+/* About */
+.about-text { margin:0 0 var(--space-3); font-size:var(--text-sm); color:var(--color-fg); }
+.about-text:last-child { margin-bottom:0; }
+.about-meta { display:flex; flex-direction:column; gap:var(--space-2); margin-top:var(--space-4); }
+.meta-row { display:flex; align-items:center; gap:var(--space-2); font-size:var(--text-xs); color:var(--color-fg-muted); }
+.meta-row .px { color:var(--color-fg-subtle); }
+
+/* Status / mood */
+.mood-block .block-body { display:flex; flex-direction:column; gap:var(--space-3); }
+.mood-line { display:flex; align-items:center; gap:var(--space-3); }
+.mood-emoji {
+  width:44px; height:44px; border-radius:var(--radius-md); flex-shrink:0;
+  background:var(--color-signal-lime-subtle); display:flex; align-items:center; justify-content:center; font-size:22px;
+}
+.mood-text { font-size:var(--text-sm); font-weight:var(--weight-medium); }
+.mood-sub { font-size:var(--text-xs); color:var(--color-fg-subtle); }
+
+/* Links */
+.links-list { display:flex; flex-direction:column; gap:var(--space-2); }
+.link-row {
+  display:flex; align-items:center; gap:var(--space-3);
+  padding:var(--space-2) var(--space-3); border:1px solid var(--color-border); border-radius:var(--radius-md);
+  text-decoration:none; color:var(--color-fg); font-size:var(--text-sm); font-weight:var(--weight-medium);
+  transition:all var(--duration-fast) var(--ease-out); background:var(--color-bg);
+}
+.link-row:hover { border-color:var(--color-accent); color:var(--color-accent); transform:translateY(-1px); box-shadow:var(--shadow-sm); }
+.link-row .px { color:var(--color-accent); }
+.link-row .url { margin-left:auto; font-size:var(--text-xs); color:var(--color-fg-subtle); font-weight:var(--weight-regular); }
+
+/* Friends */
+.friends-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-3); }
+.friend { display:flex; flex-direction:column; align-items:center; gap:var(--space-1); text-align:center; }
+.friend .avatar { width:52px; height:52px; font-size:16px; }
+.friend .fname { font-size:var(--text-xs); font-weight:var(--weight-medium); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.friend .badge { font-size:10px; padding:2px 6px; }
+.friends-foot { margin-top:var(--space-4); text-align:center; }
+.friends-foot a { font-size:var(--text-xs); color:var(--color-accent); text-decoration:none; font-weight:var(--weight-medium); }
+.friends-foot a:hover { text-decoration:underline; }
+
+/* Photo gallery */
+.photo-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-2); }
+.photo {
+  aspect-ratio:1; border-radius:var(--radius-md); position:relative; overflow:hidden;
+  display:flex; align-items:flex-end; padding:var(--space-2);
+  transition:transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+.photo:hover { transform:translateY(-2px) scale(1.01); box-shadow:var(--shadow-md); }
+.photo .tag { font-size:10px; font-weight:var(--weight-semibold); color:rgba(255,255,255,.92); text-shadow:0 1px 2px rgba(0,0,0,.35); }
+.photo[data-p='1'] { background:linear-gradient(135deg,#9180fb,#4e33c4); }
+.photo[data-p='2'] { background:linear-gradient(160deg,#ff5ecb,#7b61ff); }
+.photo[data-p='3'] { background:linear-gradient(140deg,#f0a51b,#e73128); }
+.photo[data-p='4'] { background:linear-gradient(150deg,#2ed44a,#1a6629); }
+.photo[data-p='5'] { background:linear-gradient(135deg,#60a5fa,#220b7f); }
+.photo[data-p='6'] { background:linear-gradient(145deg,#d4f951,#2ed44a); }
+.photo .px { position:absolute; top:8px; right:8px; color:rgba(255,255,255,.85); }
+
+/* Posts */
+.post-stream { display:flex; flex-direction:column; gap:var(--space-4); }
+.post { padding:var(--space-4) var(--space-5); }
+.post-author { display:flex; align-items:center; gap:var(--space-3); }
+.post-author .who { display:flex; flex-direction:column; line-height:var(--leading-tight); }
+.post-author .pname { font-size:var(--text-sm); font-weight:var(--weight-semibold); display:inline-flex; align-items:center; gap:6px; }
+.post-author .ptime { font-size:var(--text-xs); color:var(--color-fg-subtle); }
+.post-author .badge { margin-left:auto; }
+.post-text { margin:var(--space-3) 0 0; font-size:var(--text-sm); }
+.post-img { margin-top:var(--space-3); height:180px; border-radius:var(--radius-md); position:relative; overflow:hidden; }
+.post-img[data-p='a'] { background:linear-gradient(120deg,#7b61ff,#ff5ecb 60%,#f0a51b); }
+.post-img .tag { position:absolute; left:10px; bottom:8px; font-size:10px; font-weight:var(--weight-semibold); color:rgba(255,255,255,.92); text-shadow:0 1px 2px rgba(0,0,0,.35); }
+.post-foot { display:flex; align-items:center; gap:var(--space-2); margin-top:var(--space-3); }
+.post-action {
+  display:inline-flex; align-items:center; gap:6px; border:none; background:transparent;
+  color:var(--color-fg-muted); font-size:var(--text-xs); font-weight:var(--weight-medium);
+  padding:6px 10px; border-radius:var(--radius-full);
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.post-action:hover { background:var(--color-bg-muted); color:var(--color-fg); }
+.post-action[data-active] { color:var(--color-signal-pink-fg); background:var(--color-signal-pink-subtle); }
+
+/* ════════════════════ Guestbook (sticky notes theme) ════════════════════ */
+.guestbook .block-body { display:flex; flex-direction:column; gap:var(--space-5); }
+.gb-theme-row { display:flex; align-items:center; gap:var(--space-2); }
+.gb-notes { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:var(--space-4); }
+.note {
+  position:relative; display:flex; flex-direction:column; gap:var(--space-2);
+  border-radius:var(--radius-md); padding:var(--space-4); min-height:150px;
+  box-shadow:0 2px 8px rgba(0,0,0,.10),0 1px 3px rgba(0,0,0,.07),inset 0 -1px 0 rgba(0,0,0,.06);
+  transition:transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+  font-size:var(--text-sm);
+}
+.note:hover { transform:rotate(0deg) translateY(-2px) !important; box-shadow:var(--shadow-md); }
+.note[data-color='yellow'] { background:var(--sticky-yellow-bg); color:var(--sticky-yellow-fg); }
+.note[data-color='green']  { background:var(--sticky-green-bg);  color:var(--sticky-green-fg); }
+.note[data-color='pink']   { background:var(--sticky-pink-bg);   color:var(--sticky-pink-fg); }
+.note[data-color='blue']   { background:var(--sticky-blue-bg);   color:var(--sticky-blue-fg); }
+.note[data-color='purple'] { background:var(--sticky-purple-bg); color:var(--sticky-purple-fg); }
+.note:nth-child(odd)  { transform:rotate(-1.2deg); }
+.note:nth-child(even) { transform:rotate(1deg); }
+.note-head { display:flex; align-items:center; gap:var(--space-2); }
+.note-author { font-weight:var(--weight-semibold); font-size:var(--text-xs); }
+.note-time { font-size:10px; opacity:.65; margin-left:auto; }
+.note-text { flex:1; line-height:var(--leading-normal); }
+.note-del {
+  position:absolute; top:6px; right:6px; width:20px; height:20px;
+  border:none; border-radius:var(--radius-full); background:transparent; color:inherit;
+  opacity:0; font-size:12px; line-height:1; align-items:center; justify-content:center; display:none;
+  transition:all var(--duration-fast) var(--ease-out);
+}
+[data-view='owner'] .note-del, [data-view='edit'] .note-del { display:flex; }
+.note:hover .note-del { opacity:.6; }
+.note-del:hover { opacity:1 !important; background:rgba(0,0,0,.12); }
+.gb-locked {
+  align-items:center; gap:var(--space-2); font-size:var(--text-xs); color:var(--color-fg-muted);
+  padding:var(--space-3) var(--space-4); background:var(--color-bg-subtle);
+  border:1px dashed var(--color-border-strong); border-radius:var(--radius-md);
+}
+.gb-composer { grid-template-columns:1fr 220px; gap:var(--space-4); align-items:start; }
+@media (max-width:720px) { .gb-composer { grid-template-columns:1fr; } }
+.gb-form { display:flex; flex-direction:column; gap:var(--space-2); }
+.gb-form label { font-size:var(--text-xs); font-weight:var(--weight-semibold); color:var(--color-fg-muted); }
+.gb-input {
+  width:100%; min-height:96px; resize:vertical; border:1px solid var(--color-border);
+  border-radius:var(--radius-md); background:var(--color-bg); color:var(--color-fg);
+  font-family:var(--font-sans); font-size:var(--text-sm); padding:var(--space-3);
+  transition:border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+.gb-input:focus { outline:none; border-color:var(--color-border-focus); box-shadow:var(--shadow-focus); }
+.gb-form-foot { display:flex; align-items:center; gap:var(--space-3); }
+.char-count { font-size:var(--text-xs); color:var(--color-fg-subtle); margin-left:auto; }
+.gb-preview { display:flex; flex-direction:column; gap:var(--space-2); }
+.gb-preview .plabel { font-size:var(--text-xs); font-weight:var(--weight-semibold); color:var(--color-fg-muted); }
+.gb-preview .note { min-height:120px; transform:rotate(1.5deg); }
+
+/* ════════════════════ Edit-mode overlays ════════════════════ */
+.edit-only { display:none; }
+[data-view='edit'] .edit-only { display:flex; }
+[data-view='edit'] .page {
+  background-image:radial-gradient(color-mix(in srgb, var(--color-fg) 9%, transparent) 1px, transparent 1px);
+  background-size:20px 20px; border-radius:var(--radius-xl);
+}
+[data-view='edit'] .block {
+  outline:1.5px dashed color-mix(in srgb, var(--color-accent) 55%, transparent);
+  outline-offset:3px;
+}
+[data-view='edit'] .block:hover { outline-style:solid; outline-color:var(--color-accent); }
+.block-editbar {
+  position:absolute; top:-13px; left:12px; right:auto; z-index:2;
+  align-items:center; gap:var(--space-1);
+  background:var(--color-bg); border:1px solid var(--color-border-strong);
+  border-radius:var(--radius-full); padding:2px 6px 2px 4px; box-shadow:var(--shadow-sm);
+  font-size:10px; font-weight:var(--weight-semibold); color:var(--color-fg-muted);
+}
+.grip { cursor:grab; color:var(--color-fg-subtle); font-size:11px; letter-spacing:1px; padding:0 2px; user-select:none; }
+.grip:active { cursor:grabbing; }
+.vis-mini { display:inline-flex; gap:1px; background:var(--color-bg-muted); border-radius:var(--radius-full); padding:1px; }
+.vis-mini button {
+  border:none; background:transparent; font-size:9px; font-weight:var(--weight-semibold);
+  color:var(--color-fg-subtle); padding:2px 7px; border-radius:var(--radius-full); line-height:1.4;
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.vis-mini button[data-on] { background:var(--color-accent); color:var(--color-fg-on-accent); }
+.vis-mini button:hover:not([data-on]) { color:var(--color-fg); }
+.resize-handle {
+  position:absolute; right:2px; bottom:2px; width:14px; height:14px; z-index:2;
+  border-right:3px solid var(--color-accent); border-bottom:3px solid var(--color-accent);
+  border-radius:0 0 var(--radius-sm) 0; opacity:.7; cursor:nwse-resize;
+}
+.add-block {
+  border:1.5px dashed var(--color-border-strong); border-radius:var(--radius-lg);
+  background:transparent; color:var(--color-fg-muted);
+  padding:var(--space-5); flex-direction:column; align-items:center; gap:var(--space-2);
+  font-size:var(--text-sm); font-weight:var(--weight-medium); width:100%;
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.add-block:hover { border-color:var(--color-accent); color:var(--color-accent); background:var(--color-accent-subtle); }
+.add-block .plus { font-size:var(--text-xl); line-height:1; }
+.add-block .types { font-size:var(--text-xs); color:var(--color-fg-subtle); font-weight:var(--weight-regular); }
+
+/* ════════════════════ Toast ════════════════════ */
+.toast {
+  position:fixed; bottom:var(--space-5); left:50%; transform:translateX(-50%) translateY(16px);
+  z-index:var(--z-toast); display:flex; align-items:center; gap:var(--space-2);
+  background:var(--color-bg-inverse); color:var(--color-fg-inverse);
+  font-size:var(--text-sm); font-weight:var(--weight-medium);
+  padding:var(--space-3) var(--space-4); border-radius:var(--radius-md); box-shadow:var(--shadow-lg);
+  opacity:0; pointer-events:none;
+  transition:opacity var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out);
+}
+.toast[data-show] { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* Footer note */
+.mock-note { text-align:center; font-size:var(--text-xs); color:var(--color-fg-subtle); padding-bottom:var(--space-6); }
+
+/* ════════════════════════════════════════════════════════════════════
+   v2 ADDITIONS
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ---------- Themable profile canvas ---------- */
+.profile-canvas {
+  display:flex; flex-direction:column; gap:var(--space-5);
+  border-radius:var(--radius-xl);
+  transition:background var(--duration-slow) var(--ease-out);
+}
+
+/* Editing surface: dotted grid on the canvas, single source (kill the page grid) */
+[data-view='edit'] .page { background-image:none; }
+[data-view='edit'] .profile-canvas {
+  background-image:radial-gradient(color-mix(in srgb, var(--color-fg) 10%, transparent) 1px, transparent 1px);
+  background-size:20px 20px; background-position:-1px -1px;
+  padding:var(--space-4); outline:1px dashed var(--color-border-strong);
+}
+
+/* ---------- Live themes (scoped to the canvas) ---------- */
+.profile-canvas[data-ptheme='sunset'] {
+  --color-accent:#ec5a12; --color-accent-hover:#d24d0d; --color-accent-active:#b0400a;
+  --color-accent-subtle:#fdece0; --color-border-focus:#ec5a12;
+}
+.profile-canvas[data-ptheme='sunset'] .cover { background:linear-gradient(120deg,#ffd27a,#ff6ea9 55%,#7b61ff); }
+
+.profile-canvas[data-ptheme='mint'] {
+  --color-accent:#0d9c6b; --color-accent-hover:#0a8259; --color-accent-active:#076848;
+  --color-accent-subtle:#daf4ea; --color-border-focus:#0d9c6b;
+}
+.profile-canvas[data-ptheme='mint'] .cover { background:linear-gradient(120deg,#c8f5e4,#7be0c0 60%,#3fae8e); }
+
+.profile-canvas[data-ptheme='mono'] {
+  --color-accent:#1a1a1a; --color-accent-hover:#000; --color-accent-active:#000;
+  --color-accent-subtle:#eeeeee; --color-border-focus:#1a1a1a;
+  --radius-lg:3px; --radius-md:3px; --radius-sm:2px;
+}
+[data-theme='dark'] .profile-canvas[data-ptheme='mono'] {
+  --color-accent:#f4f4f4; --color-accent-hover:#fff; --color-accent-active:#fff; --color-accent-subtle:#242424;
+}
+.profile-canvas[data-ptheme='mono'] .cover { background:linear-gradient(120deg,#ececec,#cfcfcf); }
+.profile-canvas[data-ptheme='mono'] .photo,
+.profile-canvas[data-ptheme='mono'] .post-img { filter:grayscale(1) contrast(1.03); }
+.profile-canvas[data-ptheme='mono'] .avatar { filter:grayscale(1); }
+
+.profile-canvas[data-ptheme='bubblegum'] {
+  --color-accent:#ff4fc3; --color-accent-hover:#ec39b1; --color-accent-active:#c92e97;
+  --color-accent-subtle:#ffe6f6; --color-border-focus:#ff4fc3;
+  --color-bg-subtle:#fff5fb; --radius-lg:16px; --radius-md:12px; --radius-sm:8px;
+}
+.profile-canvas[data-ptheme='bubblegum'] .cover { background:linear-gradient(120deg,#ffd1ef,#ff8fd6 50%,#b39dff); }
+
+.profile-canvas[data-ptheme='terminal'] {
+  --color-bg:#0b0f0b; --color-bg-subtle:#0e140e; --color-bg-muted:#16211a; --color-bg-inverse:#d4f951;
+  --color-fg:#d7f96a; --color-fg-muted:#9dbb4e; --color-fg-subtle:#6f8a35; --color-fg-inverse:#0b0f0b;
+  --color-border:#26331f; --color-border-strong:#3a4a2a; --color-border-focus:#d4f951;
+  --color-accent:#d4f951; --color-accent-hover:#c2e840; --color-accent-active:#a9cf2f;
+  --color-accent-subtle:#18220f; --color-fg-on-accent:#0b0f0b;
+  --font-display:var(--font-mono); --font-sans:var(--font-mono);
+  --radius-lg:2px; --radius-md:2px; --radius-sm:1px;
+}
+.profile-canvas[data-ptheme='terminal'] .cover { background:repeating-linear-gradient(90deg,#0e140e 0 12px,#111a10 12px 24px); box-shadow:inset 0 0 0 1px #26331f; }
+.profile-canvas[data-ptheme='terminal'] .note { box-shadow:none; }
+
+/* ---------- No theme (raw / unstyled) ---------- */
+.profile-canvas[data-raw] {
+  --dot:color-mix(in srgb, var(--color-fg) 22%, transparent);
+  background-image:radial-gradient(var(--dot) 1.2px, transparent 1.2px);
+  background-size:18px 18px; background-position:-1px -1px;
+  padding:var(--space-5);
+  outline:1px solid var(--color-border);
+  font-family:"Times New Roman", Times, serif;
+}
+.profile-canvas[data-raw] .card,
+.profile-canvas[data-raw] .block,
+.profile-canvas[data-raw] .post { background:#fff; border:1px solid #b8b8b8; border-radius:0; box-shadow:none !important; }
+[data-theme='dark'] .profile-canvas[data-raw] .card,
+[data-theme='dark'] .profile-canvas[data-raw] .block,
+[data-theme='dark'] .profile-canvas[data-raw] .post { background:#101010; border-color:#454545; }
+.profile-canvas[data-raw] .block-title,
+.profile-canvas[data-raw] .display-name,
+.profile-canvas[data-raw] .tab-title { font-family:inherit; font-weight:bold; letter-spacing:0; }
+.profile-canvas[data-raw] .cover { background:#f0f0f0; border-bottom:1px solid #b8b8b8; box-shadow:none; }
+[data-theme='dark'] .profile-canvas[data-raw] .cover { background:#191919; border-color:#454545; }
+.profile-canvas[data-raw] .cover .px { display:none; }
+.profile-canvas[data-raw] .avatar { background:#d8d8d8 !important; color:#333 !important; border-radius:0; filter:none; box-shadow:none; }
+.profile-canvas[data-raw] .photo,
+.profile-canvas[data-raw] .post-img { background:#e2e2e2 !important; border:1px solid #b8b8b8; border-radius:0; filter:none; }
+.profile-canvas[data-raw] .photo .tag,
+.profile-canvas[data-raw] .post-img .tag { color:#444; text-shadow:none; }
+.profile-canvas[data-raw] .badge,
+.profile-canvas[data-raw] .chip { background:transparent !important; border:1px solid #999; color:#333 !important; border-radius:0; }
+[data-theme='dark'] .profile-canvas[data-raw] .badge,
+[data-theme='dark'] .profile-canvas[data-raw] .chip { color:#c8c8c8 !important; border-color:#666; }
+.profile-canvas[data-raw] a,
+.profile-canvas[data-raw] .link-row { color:#0000ee; }
+.profile-canvas[data-raw] a { text-decoration:underline; }
+[data-theme='dark'] .profile-canvas[data-raw] a { color:#7aa2ff; }
+.profile-canvas[data-raw] .link-row { background:#fff; border-color:#b8b8b8; border-radius:0; }
+[data-theme='dark'] .profile-canvas[data-raw] .link-row { background:#101010; }
+.profile-canvas[data-raw] .btn { background:#e8e8e8 !important; color:#111 !important; border:1px solid #999 !important; border-radius:0; box-shadow:none; font-family:inherit; }
+.profile-canvas[data-raw] .note { background:#fff !important; color:#222 !important; border:1px solid #b8b8b8; border-radius:0; transform:none !important; box-shadow:none; }
+.profile-canvas[data-raw] .note:nth-child(odd),
+.profile-canvas[data-raw] .note:nth-child(even) { transform:none !important; }
+[data-theme='dark'] .profile-canvas[data-raw] .note { background:#141414 !important; color:#ddd !important; border-color:#454545; }
+.profile-canvas[data-raw] .mood-emoji { background:#eee !important; border-radius:0; }
+.profile-canvas[data-raw] .tab[data-selected] { color:#0000ee; }
+.profile-canvas[data-raw] .tab[data-selected]::after { background:#0000ee; }
+.profile-canvas[data-raw] .px { color:#666 !important; }
+
+/* ---------- Header tabs → panels ---------- */
+.tab-panel { display:none; }
+.tab-panel[data-active] { display:block; }
+[data-view='edit'] .profile-header .tabs { opacity:.5; }
+
+/* Posts tab */
+.posts-tab { max-width:640px; margin:0 auto; }
+.posts-tab .post-stream { display:flex; flex-direction:column; gap:var(--space-4); }
+.tab-title { font-family:var(--font-display); font-size:var(--text-xl); font-weight:var(--weight-bold); margin:0 0 var(--space-4); }
+.pager { display:flex; align-items:center; justify-content:center; gap:var(--space-2); padding:var(--space-5) 0 var(--space-2); }
+.pager .pg {
+  min-width:34px; height:34px; padding:0 10px; display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--color-border); background:var(--color-bg); color:var(--color-fg-muted);
+  border-radius:var(--radius-md); font-size:var(--text-sm); font-weight:var(--weight-medium); cursor:pointer;
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.pager .pg:hover:not([disabled]) { border-color:var(--color-border-strong); color:var(--color-fg); }
+.pager .pg[data-on] { background:var(--color-accent); color:var(--color-fg-on-accent); border-color:var(--color-accent); }
+.pager .pg[disabled] { opacity:.4; cursor:default; }
+
+/* Photos tab */
+.photos-tab .photo-grid { grid-template-columns:repeat(4,1fr); }
+@media (max-width:840px){ .photos-tab .photo-grid { grid-template-columns:repeat(2,1fr); } }
+
+/* Full-width sortable zone */
+.fullzone { display:flex; flex-direction:column; gap:var(--space-5); }
+
+/* ---------- Drag reorder ---------- */
+.block.dragging { opacity:.35; outline:2px dashed var(--color-accent) !important; }
+[data-view='edit'] .block[draggable='true'] { cursor:grab; }
+[data-view='edit'] .block[draggable='true']:active { cursor:grabbing; }
+[data-view='edit'] .col { min-height:60px; }
+
+/* ---------- Add-block modal ---------- */
+.modal-overlay {
+  position:fixed; inset:0; z-index:var(--z-modal); display:none;
+  align-items:center; justify-content:center; padding:var(--space-5);
+  background:var(--color-overlay); backdrop-filter:blur(3px);
+}
+.modal-overlay[data-open] { display:flex; }
+.modal {
+  width:min(780px,100%); max-height:88vh; display:flex; flex-direction:column;
+  background:var(--color-bg); border:1px solid var(--color-border); border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-lg); overflow:hidden;
+}
+.modal-head { display:flex; align-items:center; gap:var(--space-3); padding:var(--space-4) var(--space-5); border-bottom:1px solid var(--color-border); }
+.modal-head h3 { margin:0; font-family:var(--font-display); font-size:var(--text-lg); font-weight:var(--weight-bold); }
+.modal-tabs { display:inline-flex; gap:2px; padding:3px; background:var(--color-bg-muted); border-radius:var(--radius-md); margin-left:var(--space-2); }
+.modal-tabs button { border:none; background:transparent; color:var(--color-fg-muted); font-size:var(--text-xs); font-weight:var(--weight-semibold); padding:6px 12px; border-radius:var(--radius-sm); cursor:pointer; }
+.modal-tabs button[data-selected] { background:var(--color-bg); color:var(--color-fg); box-shadow:var(--shadow-sm); }
+.modal-close { margin-left:auto; border:none; background:transparent; color:var(--color-fg-muted); font-size:var(--text-lg); cursor:pointer; width:32px; height:32px; border-radius:var(--radius-sm); }
+.modal-close:hover { background:var(--color-bg-subtle); color:var(--color-fg); }
+.modal-body { padding:var(--space-5); overflow:auto; }
+.modal-foot { display:flex; align-items:center; gap:var(--space-3); padding:var(--space-4) var(--space-5); border-top:1px solid var(--color-border); }
+.modal-foot-note { font-size:var(--text-xs); color:var(--color-fg-subtle); margin-right:auto; }
+.mpanel[hidden] { display:none; }
+.modal-search {
+  width:100%; height:var(--control-height-lg); padding:0 var(--space-4); margin-bottom:var(--space-4);
+  border:1px solid var(--color-border); border-radius:var(--radius-md); background:var(--color-bg-subtle);
+  color:var(--color-fg); font-family:var(--font-sans); font-size:var(--text-sm);
+}
+.modal-search:focus { outline:none; border-color:var(--color-border-focus); box-shadow:var(--shadow-focus); background:var(--color-bg); }
+.widget-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-3); }
+@media (max-width:640px){ .widget-grid { grid-template-columns:repeat(2,1fr); } }
+.widget-card {
+  position:relative; text-align:left; display:flex; flex-direction:column; gap:6px;
+  padding:var(--space-3); border:1px solid var(--color-border); border-radius:var(--radius-md);
+  background:var(--color-bg); cursor:pointer; transition:all var(--duration-fast) var(--ease-out);
+}
+.widget-card:hover { border-color:var(--color-border-strong); transform:translateY(-1px); box-shadow:var(--shadow-sm); }
+.widget-card[data-selected] { border-color:var(--color-accent); box-shadow:var(--shadow-focus); }
+.widget-card .wc-icon { width:28px; height:28px; border-radius:var(--radius-sm); background:var(--color-accent-subtle); color:var(--color-accent); display:flex; align-items:center; justify-content:center; font-size:15px; }
+.widget-card .wc-name { font-size:var(--text-sm); font-weight:var(--weight-semibold); }
+.widget-card .wc-cat { font-size:var(--text-xs); color:var(--color-fg-subtle); }
+.widget-card .wc-lock { position:absolute; top:8px; right:8px; font-size:9px; color:var(--color-signal-lime-fg); background:var(--color-signal-lime-subtle); border-radius:var(--radius-full); padding:2px 6px; font-weight:var(--weight-semibold); }
+.widget-empty { grid-column:1/-1; text-align:center; color:var(--color-fg-subtle); font-size:var(--text-sm); padding:var(--space-6); }
+
+/* Layout builder */
+.mpanel-hint { font-size:var(--text-sm); color:var(--color-fg-muted); margin:0 0 var(--space-4); }
+.lb-canvas { display:flex; flex-direction:column; gap:var(--space-3); margin-bottom:var(--space-4); min-height:40px; }
+.lb-row { border:1px dashed var(--color-border-strong); border-radius:var(--radius-md); padding:var(--space-2); }
+.lb-row-inner { display:flex; align-items:stretch; }
+.lb-col { position:relative; flex:1 1 0; min-width:44px; display:flex; }
+.lb-col-inner { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-height:76px; margin:4px; border:1px dashed var(--color-border-strong); border-radius:var(--radius-sm); background:var(--color-bg-subtle); font-size:var(--text-xs); color:var(--color-fg-muted); text-align:center; }
+.lb-col-inner.filled { background:var(--color-accent-subtle); border-style:solid; border-color:var(--color-accent); color:var(--color-accent); font-weight:var(--weight-semibold); }
+.lb-add-comp { border:none; background:transparent; color:inherit; font-size:var(--text-xs); font-weight:var(--weight-medium); cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; }
+.lb-add-comp .p { font-size:var(--text-lg); line-height:1; }
+.lb-comp { display:flex; align-items:center; gap:6px; }
+.lb-comp .x { border:none; background:transparent; cursor:pointer; color:inherit; opacity:.6; font-size:11px; }
+.lb-comp .x:hover { opacity:1; }
+.lb-resizer { flex:0 0 10px; align-self:stretch; cursor:col-resize; position:relative; touch-action:none; }
+.lb-resizer::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:2px; height:58%; background:var(--color-border-strong); border-radius:1px; }
+.lb-resizer:hover::after { background:var(--color-accent); width:3px; }
+.lb-row-tools { display:flex; align-items:center; gap:var(--space-2); margin-top:var(--space-2); padding:0 var(--space-1); }
+.lb-row-tools button { border:none; background:var(--color-bg-muted); color:var(--color-fg-muted); font-size:var(--text-xs); font-weight:var(--weight-medium); padding:4px 10px; border-radius:var(--radius-full); cursor:pointer; }
+.lb-row-tools button:hover { color:var(--color-fg); }
+.lb-addrow { width:100%; border:1.5px dashed var(--color-border-strong); background:transparent; color:var(--color-fg-muted); padding:var(--space-3); border-radius:var(--radius-md); font-size:var(--text-sm); font-weight:var(--weight-medium); cursor:pointer; }
+.lb-addrow:hover { border-color:var(--color-accent); color:var(--color-accent); background:var(--color-accent-subtle); }
+.lb-pop { position:absolute; z-index:5; top:100%; left:50%; transform:translateX(-50%); width:230px; margin-top:6px; background:var(--color-bg); border:1px solid var(--color-border-strong); border-radius:var(--radius-md); box-shadow:var(--shadow-lg); padding:var(--space-2); }
+.lb-pop input { width:100%; height:30px; padding:0 8px; margin-bottom:6px; border:1px solid var(--color-border); border-radius:var(--radius-sm); background:var(--color-bg-subtle); color:var(--color-fg); font-size:var(--text-xs); font-family:var(--font-sans); }
+.lb-pop input:focus { outline:none; border-color:var(--color-border-focus); }
+.lb-pop-list { max-height:170px; overflow:auto; display:flex; flex-direction:column; }
+.lb-pop-list button { text-align:left; border:none; background:transparent; padding:6px 8px; border-radius:var(--radius-sm); font-size:var(--text-xs); color:var(--color-fg); cursor:pointer; display:flex; align-items:center; gap:8px; }
+.lb-pop-list button:hover { background:var(--color-bg-subtle); }
+
+/* None (raw) swatch */
+.swatch-none { background:#fff !important; display:flex; align-items:center; justify-content:center; }
+.swatch-none .none-mark { font-size:13px; color:#888; line-height:1; }
+[data-theme='dark'] .swatch-none { background:#242424 !important; }
+[data-theme='dark'] .swatch-none .none-mark { color:#aaa; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ Demo controls (mockup chrome, not product UI) ═══════════ -->
+<div class="demo-bar">
+  <span class="label">Mockup controls</span>
+  <div class="demo-group">
+    <div class="seg" id="viewSeg" role="tablist" aria-label="View">
+      <button data-view-btn="visitor" data-selected>Visitor view</button>
+      <button data-view-btn="owner">Owner view</button>
+      <button data-view-btn="edit">Edit mode</button>
+    </div>
+  </div>
+  <div class="demo-group" id="audienceGroup">
+    <span class="label">Viewing as</span>
+    <div class="seg" id="audSeg" aria-label="Audience">
+      <button data-aud-btn="stranger" data-selected>Stranger</button>
+      <button data-aud-btn="follower">Follower</button>
+      <button data-aud-btn="mutual">Mutual friend</button>
+    </div>
+  </div>
+  <div class="demo-spacer"></div>
+  <span class="label" id="hiddenCount"></span>
+</div>
+
+<!-- ═══════════ App navigation ═══════════ -->
+<nav class="appnav">
+  <div class="appnav-inner">
+    <a class="brand" href="#">
+      <span class="px" style="width:18px;height:18px">
+        <svg viewBox="0 0 8 8" fill="currentColor"><rect x="3" y="0" width="1" height="2"/><rect x="1" y="3" width="5" height="1"/><rect x="3" y="4" width="1" height="2"/><rect x="1" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/></svg>
+      </span>
+      <span class="brand-name">Orbit</span>
+    </a>
+    <div class="appnav-links">
+      <a href="#">Home</a>
+      <a href="#">Discover</a>
+      <a href="#" data-active>Profile</a>
+      <a href="#">Messages</a>
+    </div>
+    <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <span class="px sun" style="width:14px;height:14px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="2" y="2" width="4" height="4"/><rect x="3" y="0" width="2" height="1"/><rect x="3" y="7" width="2" height="1"/><rect x="0" y="3" width="1" height="2"/><rect x="7" y="3" width="1" height="2"/></svg></span>
+      <span class="px moon" style="width:14px;height:14px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="2" y="1" width="3" height="1"/><rect x="1" y="2" width="2" height="4"/><rect x="2" y="6" width="3" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/></svg></span>
+    </button>
+    <span class="avatar" data-size="md" data-hue="purple">MO</span>
+  </div>
+</nav>
+
+<!-- ═══════════ Edit-mode toolbar ═══════════ -->
+<div class="edit-toolbar">
+  <div class="edit-toolbar-inner">
+    <span class="title">
+      <span class="px" style="width:12px;height:12px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="1" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/><rect x="3" y="5" width="2" height="1"/><rect x="3" y="6" width="1" height="1"/></svg></span>
+      Editing your profile
+    </span>
+    <span class="hint">Drag blocks to arrange · resize from the corner · set who sees each block</span>
+    <div class="demo-spacer"></div>
+    <div class="theme-swatches" title="Tier 1 themes">
+      <span class="label" style="font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--color-fg-subtle)">Theme</span>
+      <button class="swatch" data-ptheme="orbit" data-selected style="background:linear-gradient(135deg,#7b61ff,#4e33c4)" title="Orbit"></button>
+      <button class="swatch" data-ptheme="mono" style="background:linear-gradient(135deg,#111,#777)" title="Mono"></button>
+      <button class="swatch" data-ptheme="sunset" style="background:linear-gradient(135deg,#ffd27a,#ff6ea9)" title="Sunset"></button>
+      <button class="swatch" data-ptheme="mint" style="background:linear-gradient(135deg,#c8f5e4,#3fae8e)" title="Mint"></button>
+      <button class="swatch premium" data-ptheme="bubblegum" style="background:linear-gradient(135deg,#ff5ecb,#7b61ff)" title="Bubblegum — Premium"><span class="lock">★</span></button>
+      <button class="swatch premium" data-ptheme="terminal" style="background:linear-gradient(135deg,#d4f951,#111)" title="Terminal — Premium"><span class="lock">★</span></button>
+      <button class="swatch swatch-none" data-ptheme="none" title="No theme (raw)"><span class="none-mark">∅</span></button>
+    </div>
+    <button class="btn" data-size="sm" data-variant="ghost" id="mobilePreviewBtn">Mobile preview</button>
+    <button class="btn" data-size="sm" data-variant="secondary" id="discardBtn">Discard</button>
+    <button class="btn" data-size="sm" data-variant="primary" id="saveBtn">Save changes</button>
+  </div>
+</div>
+
+<main class="page">
+
+  <div class="aud-hint">
+    <span class="px" style="width:12px;height:12px;color:var(--color-fg-subtle)"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="1" y="3" width="6" height="4"/><rect x="2" y="1" width="1" height="2"/><rect x="5" y="1" width="1" height="2"/><rect x="2" y="0" width="4" height="1"/></svg></span>
+    <span id="audHintText">Viewing as a stranger — followers-only and friends-only blocks are not delivered to this viewer at all (server-enforced, not just hidden).</span>
+  </div>
+
+  <!-- ═══════════ Themable profile canvas ═══════════ -->
+  <div class="profile-canvas" id="profileCanvas" data-ptheme="orbit">
+
+  <!-- ═══════════ Profile header ═══════════ -->
+  <header class="card profile-header block" data-vis="public">
+    <div class="block-editbar edit-only" style="top:10px;left:16px">
+      <span class="grip" title="Drag to move">⠿</span> PROFILE HEADER
+      <span class="vis-mini" title="Header is always public"><button data-on>Public</button></span>
+    </div>
+    <div class="cover">
+      <span class="px s1" style="width:22px;height:22px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="3" y="0" width="1" height="2"/><rect x="1" y="3" width="5" height="1"/><rect x="3" y="4" width="1" height="2"/><rect x="1" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/></svg></span>
+      <span class="px s2" style="width:14px;height:14px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="2" y="0" width="4" height="2"/><rect x="0" y="2" width="8" height="4"/><rect x="2" y="6" width="4" height="2"/></svg></span>
+      <span class="px s3" style="width:16px;height:16px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="1" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/><rect x="3" y="5" width="2" height="1"/><rect x="3" y="6" width="1" height="1"/></svg></span>
+    </div>
+    <div class="profile-body">
+      <div class="top-row">
+        <span class="avatar profile-avatar" data-size="xl" data-hue="purple">MO</span>
+        <div class="header-actions">
+          <!-- Visitor actions vary by relationship -->
+          <div class="visitor-actions" style="gap:var(--space-2);align-items:center">
+            <button class="btn aud-el aud-stranger" data-variant="primary">＋ Follow</button>
+            <button class="btn aud-el aud-follower" data-variant="secondary">✓ Following</button>
+            <span class="badge aud-el aud-mutual" data-tone="pink" style="font-size:var(--text-sm);padding:6px 12px">♥ Mutual friends</span>
+            <button class="btn aud-el aud-mutual" data-variant="secondary">Message</button>
+            <button class="btn" data-variant="ghost" title="More">···</button>
+          </div>
+          <!-- Owner actions -->
+          <div class="owner-actions" style="gap:var(--space-2)">
+            <button class="btn" data-variant="secondary" id="editProfileBtn">Edit profile</button>
+            <button class="btn" data-variant="primary" id="customizeBtn">✦ Customize</button>
+          </div>
+        </div>
+      </div>
+      <div class="identity">
+        <span class="name-row">
+          <h1 class="display-name">Maya Okonkwo</h1>
+          <span class="badge" data-tone="accent" title="Verified">✓ Verified</span>
+          <span class="badge" data-tone="lime" title="Orbit Premium supporter">✦ Premium</span>
+        </span>
+        <span class="handle">@mayao<span class="badge fyou aud-el aud-mutual" data-tone="neutral" data-variant="outline">Follows you</span></span>
+      </div>
+      <p class="bio-line">Product designer &amp; film-photography nerd. Building small, calm software. My corner of the internet — sign the guestbook if we're friends ♡</p>
+      <div class="stats-row">
+        <span class="stat"><span class="value">214</span><span class="label">Posts</span></span>
+        <span class="stat"><span class="value">1,204</span><span class="label">Followers</span></span>
+        <span class="stat"><span class="value">312</span><span class="label">Following</span></span>
+        <span class="stat"><span class="value">86</span><span class="label"><span class="dot"></span>Mutual friends</span></span>
+      </div>
+      <div class="tabs" style="margin-top:var(--space-2)">
+        <button class="tab" data-tab="profile" data-selected>Profile</button>
+        <button class="tab" data-tab="posts">Posts</button>
+        <button class="tab" data-tab="photos">Photos</button>
+        <button class="tab" data-tab="guestbook">Guestbook</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="tab-panels">
+
+  <!-- ░░ Tab: Profile — the full arranged layout ░░ -->
+  <div class="tab-panel" id="panel-profile" data-tab="profile" data-active>
+
+  <div class="columns">
+    <!-- ═══════════ Left column ═══════════ -->
+    <div class="col">
+
+      <!-- About — public -->
+      <section class="card block" data-vis="public">
+        <div class="block-editbar edit-only">
+          <span class="grip" title="Drag to move">⠿</span> ABOUT
+          <span class="vis-mini"><button data-on>Public</button><button>Followers</button><button>Friends</button></span>
+        </div>
+        <span class="resize-handle edit-only"></span>
+        <div class="block-head">
+          <h2 class="block-title"><span class="px" style="width:12px;height:12px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="2" y="0" width="4" height="2"/><rect x="0" y="2" width="8" height="4"/><rect x="2" y="6" width="4" height="2"/></svg></span>About me</h2>
+          <span class="badge vis-badge" data-tone="neutral" data-variant="outline">Public</span>
+        </div>
+        <div class="block-body">
+          <p class="about-text">Hi, I'm Maya. I shoot film, design calm software, and collect airport postcards. This profile is arranged exactly how I like it — that's the whole point of Orbit.</p>
+          <p class="about-text">Ask me about rangefinders, type scales, or the best coffee in Lisbon.</p>
+          <div class="about-meta">
+            <span class="meta-row"><span class="px" style="width:10px;height:10px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="2" y="0" width="4" height="1"/><rect x="1" y="1" width="6" height="3"/><rect x="2" y="4" width="4" height="2"/><rect x="3" y="6" width="2" height="2"/></svg></span>Lisbon, Portugal</span>
+            <span class="meta-row"><span class="px" style="width:10px;height:10px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="2" y="0" width="1" height="2"/><rect x="5" y="0" width="1" height="2"/></svg></span>In orbit since March 2026</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Status / mood — friends only -->
+      <section class="card block mood-block" data-vis="friends">
+        <div class="block-editbar edit-only">
+          <span class="grip" title="Drag to move">⠿</span> STATUS / MOOD
+          <span class="vis-mini"><button>Public</button><button>Followers</button><button data-on>Friends</button></span>
+        </div>
+        <span class="resize-handle edit-only"></span>
+        <div class="block-head">
+          <h2 class="block-title"><span class="px" style="width:12px;height:12px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="1" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/><rect x="3" y="5" width="2" height="1"/><rect x="3" y="6" width="1" height="1"/></svg></span>Right now</h2>
+          <span class="badge vis-badge" data-tone="pink">Friends only</span>
+        </div>
+        <div class="block-body" style="display:flex;flex-direction:column;gap:var(--space-3)">
+          <div class="mood-line">
+            <span class="mood-emoji">🎧</span>
+            <span>
+              <span class="mood-text" style="display:block">Listening to Cocteau Twins on repeat</span>
+              <span class="mood-sub">mood: dreamy · updated 20 min ago</span>
+            </span>
+          </div>
+          <div class="mood-line">
+            <span class="mood-emoji" style="background:var(--color-signal-pink-subtle)">📷</span>
+            <span>
+              <span class="mood-text" style="display:block">3 rolls at the lab, wish me luck</span>
+              <span class="mood-sub">yesterday</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Links — followers only -->
+      <section class="card block" data-vis="followers">
+        <div class="block-editbar edit-only">
+          <span class="grip" title="Drag to move">⠿</span> LINKS
+          <span class="vis-mini"><button>Public</button><button data-on>Followers</button><button>Friends</button></span>
+        </div>
+        <span class="resize-handle edit-only"></span>
+        <div class="block-head">
+          <h2 class="block-title"><span class="px" style="width:12px;height:12px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="0" y="3" width="5" height="1"/><rect x="4" y="1" width="1" height="2"/><rect x="4" y="4" width="1" height="2"/><rect x="5" y="2" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/></svg></span>Links</h2>
+          <span class="badge vis-badge" data-tone="warning">Followers only</span>
+        </div>
+        <div class="block-body links-list">
+          <a class="link-row" href="#"><span class="px" style="width:10px;height:10px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="2" y="0" width="4" height="2"/><rect x="0" y="2" width="8" height="4"/><rect x="2" y="6" width="4" height="2"/></svg></span>Portfolio<span class="url">maya.design</span></a>
+          <a class="link-row" href="#"><span class="px" style="width:10px;height:10px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="2" y="0" width="1" height="2"/><rect x="5" y="0" width="1" height="2"/></svg></span>Film diary<span class="url">grain.blog/maya</span></a>
+          <a class="link-row" href="#"><span class="px" style="width:10px;height:10px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="2" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="1" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/><rect x="3" y="5" width="2" height="1"/><rect x="3" y="6" width="1" height="1"/></svg></span>Print shop<span class="url">shop.maya.design</span></a>
+        </div>
+      </section>
+
+      <!-- Friends — public -->
+      <section class="card block" data-vis="public">
+        <div class="block-editbar edit-only">
+          <span class="grip" title="Drag to move">⠿</span> FRIENDS
+          <span class="vis-mini"><button data-on>Public</button><button>Followers</button><button>Friends</button></span>
+        </div>
+        <span class="resize-handle edit-only"></span>
+        <div class="block-head">
+          <h2 class="block-title"><span class="px" style="width:12px;height:12px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="1" y="1" width="2" height="2"/><rect x="5" y="1" width="2" height="2"/><rect x="0" y="4" width="4" height="3"/><rect x="4" y="4" width="4" height="3"/></svg></span>Friends</h2>
+          <span class="badge" data-tone="neutral" style="margin-left:6px">86</span>
+          <span class="badge vis-badge" data-tone="neutral" data-variant="outline">Public</span>
+        </div>
+        <div class="block-body">
+          <div class="friends-grid">
+            <span class="friend"><span class="avatar" data-hue="pink">RC</span><span class="fname">Rafael</span><span class="badge" data-tone="pink">mutual</span></span>
+            <span class="friend"><span class="avatar" data-hue="lime">NR</span><span class="fname">Nadia</span><span class="badge" data-tone="pink">mutual</span></span>
+            <span class="friend"><span class="avatar" data-hue="blue">JT</span><span class="fname">June</span><span class="badge" data-tone="pink">mutual</span></span>
+            <span class="friend"><span class="avatar" data-hue="amber">KO</span><span class="fname">Kofi</span><span class="badge" data-tone="pink">mutual</span></span>
+            <span class="friend"><span class="avatar" data-hue="slate">LP</span><span class="fname">Lars</span><span class="badge" data-tone="pink">mutual</span></span>
+            <span class="friend"><span class="avatar" data-hue="purple">AS</span><span class="fname">Asha</span><span class="badge" data-tone="pink">mutual</span></span>
+          </div>
+          <div class="friends-foot"><a href="#">See all 86 friends →</a></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ═══════════ Right column ═══════════ -->
+    <div class="col">
+
+      <!-- Photo gallery — public -->
+      <section class="card block" data-vis="public">
+        <div class="block-editbar edit-only">
+          <span class="grip" title="Drag to move">⠿</span> PHOTO GALLERY
+          <span class="vis-mini"><button data-on>Public</button><button>Followers</button><button>Friends</button></span>
+        </div>
+        <span class="resize-handle edit-only"></span>
+        <div class="block-head">
+          <h2 class="block-title"><span class="px" style="width:12px;height:12px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="0" y="1" width="8" height="6"/><rect x="2" y="0" width="4" height="1"/></svg></span>Film wall</h2>
+          <span class="badge vis-badge" data-tone="neutral" data-variant="outline">Public</span>
+        </div>
+        <div class="block-body">
+          <div class="photo-grid">
+            <span class="photo" data-p="1"><span class="tag">porto, kodak gold</span><span class="px" style="width:10px;height:10px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="3" y="0" width="1" height="2"/><rect x="1" y="3" width="5" height="1"/><rect x="3" y="4" width="1" height="2"/></svg></span></span>
+            <span class="photo" data-p="2"><span class="tag">neon, night walk</span></span>
+            <span class="photo" data-p="3"><span class="tag">golden hour</span></span>
+            <span class="photo" data-p="4"><span class="tag">the park roll</span></span>
+            <span class="photo" data-p="5"><span class="tag">blue hour</span></span>
+            <span class="photo" data-p="6"><span class="tag">spring, expired film</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Post stream — public (one friends-only post inside) -->
+      <section class="card block" data-vis="public" style="background:transparent;border:none">
+        <div class="block-editbar edit-only" style="top:-13px">
+          <span class="grip" title="Drag to move">⠿</span> POST STREAM
+          <span class="vis-mini"><button data-on>Public</button><button>Followers</button><button>Friends</button></span>
+        </div>
+        <div class="post-stream">
+
+          <article class="card post friends-only-post">
+            <div class="post-author">
+              <span class="avatar" data-size="lg" data-hue="purple">MO</span>
+              <span class="who">
+                <span class="pname">Maya Okonkwo <span class="badge" data-tone="accent">✓</span></span>
+                <span class="ptime">2 hours ago</span>
+              </span>
+              <span class="badge" data-tone="pink">♥ Friends only</span>
+            </div>
+            <p class="post-text">Okay, real talk for friends only: I got the job!! Signing the contract tomorrow. Scream quietly with me until it's official 🎉</p>
+            <div class="post-foot">
+              <button class="post-action" data-active>♥ React</button>
+              <button class="post-action">Reply</button>
+              <span class="char-count owner-only" style="margin-left:auto">visible to 86 friends</span>
+            </div>
+          </article>
+
+          <article class="card post">
+            <div class="post-author">
+              <span class="avatar" data-size="lg" data-hue="purple">MO</span>
+              <span class="who">
+                <span class="pname">Maya Okonkwo <span class="badge" data-tone="accent">✓</span></span>
+                <span class="ptime">Yesterday</span>
+              </span>
+              <span class="badge" data-tone="neutral" data-variant="outline">Public</span>
+            </div>
+            <p class="post-text">Spent the weekend shooting on the old rangefinder. A few frames from the roll — the light was unreal.</p>
+            <div class="post-img" data-p="a"><span class="tag">kodak portra 400 · frame 14</span></div>
+            <div class="post-foot">
+              <button class="post-action">♥ React</button>
+              <button class="post-action">Reply</button>
+            </div>
+          </article>
+
+          <article class="card post">
+            <div class="post-author">
+              <span class="avatar" data-size="lg" data-hue="purple">MO</span>
+              <span class="who">
+                <span class="pname">Maya Okonkwo <span class="badge" data-tone="accent">✓</span></span>
+                <span class="ptime">3 days ago</span>
+              </span>
+              <span class="badge" data-tone="neutral" data-variant="outline">Public</span>
+            </div>
+            <p class="post-text">Hot take: the best profile is the one that looks nothing like anyone else's. That's the whole reason I'm here and not on the other apps.</p>
+            <div class="post-foot">
+              <button class="post-action">♥ React</button>
+              <button class="post-action">Reply</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ═══════════ Full-width blocks zone (guestbook + any added rows) ═══════════ -->
+  <div class="fullzone" id="fullZone">
+
+  <!-- ═══════════ Guestbook — full width, sticky notes theme ═══════════ -->
+  <section class="card block guestbook" id="profileGuestbook" data-vis="public">
+    <div class="block-editbar edit-only">
+      <span class="grip" title="Drag to move">⠿</span> GUESTBOOK
+      <span class="vis-mini"><button data-on>Public</button><button>Followers</button><button>Friends</button></span>
+    </div>
+    <span class="resize-handle edit-only"></span>
+    <div class="block-head">
+      <h2 class="block-title"><span class="px" style="width:12px;height:12px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="1" y="0" width="6" height="7"/><rect x="2" y="7" width="1" height="1"/></svg></span>Guestbook</h2>
+      <span class="chip" style="margin-left:6px">✎ sticky notes</span>
+      <span class="badge vis-badge" data-tone="neutral" data-variant="outline">Public</span>
+      <span class="badge owner-only" data-tone="neutral" style="margin-left:var(--space-2)" title="Guestbook theme — premium styles available">theme: free</span>
+    </div>
+    <div class="block-body">
+
+      <div class="gb-notes">
+        <div class="note" data-color="yellow">
+          <div class="note-head"><span class="avatar" data-size="sm" data-hue="pink">RC</span><span class="note-author">Rafael</span><span class="note-time">2d ago</span></div>
+          <div class="note-text">MAYA. The new film wall is unreal. That porto frame belongs in a gallery, I'm not kidding.</div>
+          <button class="note-del" title="Delete entry (owner)">✕</button>
+        </div>
+        <div class="note" data-color="pink">
+          <div class="note-head"><span class="avatar" data-size="sm" data-hue="lime">NR</span><span class="note-author">Nadia</span><span class="note-time">4d ago</span></div>
+          <div class="note-text">signing your guestbook like it's 2004 and I love everything about it ♡</div>
+          <button class="note-del" title="Delete entry (owner)">✕</button>
+        </div>
+        <div class="note" data-color="blue">
+          <div class="note-head"><span class="avatar" data-size="sm" data-hue="blue">JT</span><span class="note-author">June</span><span class="note-time">1w ago</span></div>
+          <div class="note-text">Thanks for the coffee rec — you were right, best pastel de nata of my life. Lisbon misses you already.</div>
+          <button class="note-del" title="Delete entry (owner)">✕</button>
+        </div>
+        <div class="note" data-color="green">
+          <div class="note-head"><span class="avatar" data-size="sm" data-hue="amber">KO</span><span class="note-author">Kofi</span><span class="note-time">2w ago</span></div>
+          <div class="note-text">first!! wait, do guestbooks have firsts? claiming it anyway.</div>
+          <button class="note-del" title="Delete entry (owner)">✕</button>
+        </div>
+      </div>
+
+      <!-- Stranger / follower see a lock note -->
+      <div class="gb-locked" style="margin-top:var(--space-4)">
+        <span class="px" style="width:11px;height:11px"><svg viewBox="0 0 8 8" fill="currentColor"><rect x="1" y="3" width="6" height="4"/><rect x="2" y="1" width="1" height="2"/><rect x="5" y="1" width="1" height="2"/><rect x="2" y="0" width="4" height="1"/></svg></span>
+        Only mutual friends can sign Maya's guestbook. Follow each other to unlock it.
+      </div>
+
+      <!-- Mutual friends get the composer with live preview -->
+      <div class="gb-composer" style="margin-top:var(--space-4)">
+        <div class="gb-form">
+          <label>Leave a note for Maya</label>
+          <textarea class="gb-input" maxlength="300" placeholder="Write something nice…">you owe me a photo walk when you're back — bringing the ricoh, no excuses ✌</textarea>
+          <div class="gb-form-foot">
+            <button class="btn gb-post-btn" data-size="sm" data-variant="primary">Post to guestbook</button>
+            <span class="char-count"><span class="gb-count">72</span>/300</span>
+          </div>
+        </div>
+        <div class="gb-preview">
+          <span class="plabel">Preview — Maya's sticky-note style</span>
+          <div class="note" data-color="purple">
+            <div class="note-head"><span class="avatar" data-size="sm" data-hue="lime">YO</span><span class="note-author">You</span><span class="note-time">now</span></div>
+            <div class="note-text gb-preview-text">you owe me a photo walk when you're back — bringing the ricoh, no excuses ✌</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div><!-- /fullzone -->
+
+  <!-- ═══════════ Add block (edit mode only) ═══════════ -->
+  <button class="add-block edit-only" id="addBlockBtn">
+    <span class="plus">＋</span>
+    Add a block
+    <span class="types">Widgets · Layout builder · rows &amp; columns</span>
+  </button>
+
+  </div><!-- /tab: profile -->
+
+  <!-- ░░ Tab: Posts — post stream + pagination ░░ -->
+  <div class="tab-panel" data-tab="posts">
+    <div class="posts-tab" id="postsTab">
+      <h2 class="tab-title">Posts</h2>
+      <div class="post-stream" id="postsTabStream"></div>
+      <div class="pager" id="postsPager"></div>
+    </div>
+  </div>
+
+  <!-- ░░ Tab: Photos ░░ -->
+  <div class="tab-panel" data-tab="photos">
+    <div class="photos-tab">
+      <h2 class="tab-title">Photos</h2>
+      <section class="card block" data-vis="public">
+        <div class="block-body">
+          <div class="photo-grid" id="photosTabGrid"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ░░ Tab: Guestbook ░░ -->
+  <div class="tab-panel" data-tab="guestbook">
+    <div class="guestbook-tab" id="guestbookTab"></div>
+  </div>
+
+  </div><!-- /tab-panels -->
+  </div><!-- /profile-canvas -->
+
+  <p class="mock-note">Orbit profile mockup · built with the @your-org/design-system tokens (Funnel Sans / Funnel Display, light + dark) · not a functional product · v2</p>
+
+  <!-- ═══════════ Add-block modal (block picker + layout builder) ═══════════ -->
+  <div class="modal-overlay" id="blockModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-label="Add a block">
+      <div class="modal-head">
+        <h3>Add a block</h3>
+        <div class="modal-tabs">
+          <button data-mtab="widgets" data-selected>Widgets</button>
+          <button data-mtab="layout">Layout</button>
+        </div>
+        <button class="modal-close" id="blockModalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="mpanel" data-mpanel="widgets">
+          <input class="modal-search" id="widgetSearch" placeholder="Search blocks &amp; widgets… (try: photo, guestbook, poll)">
+          <div class="widget-grid" id="widgetGrid"></div>
+        </div>
+        <div class="mpanel" data-mpanel="layout" hidden>
+          <p class="mpanel-hint">Build a custom section: add a row, split it into columns, drag the handles between columns to resize, then drop a component into each column.</p>
+          <div class="lb-canvas" id="lbCanvas"></div>
+          <button class="lb-addrow" id="lbAddRow">＋ Add row</button>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <span class="modal-foot-note" id="modalFootNote">Pick a widget to add, or switch to Layout to build a custom section.</span>
+        <button class="btn" data-variant="secondary" id="blockModalCancel">Cancel</button>
+        <button class="btn" data-variant="primary" id="blockModalAdd">Add to profile</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var canvas = document.getElementById('profileCanvas');
+  var toastEl = document.getElementById('toast');
+  var toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.setAttribute('data-show', '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.removeAttribute('data-show'); }, 2600);
+  }
+
+  /* ════════ View switcher ════════ */
+  var viewBtns = document.querySelectorAll('[data-view-btn]');
+  function setView(v) {
+    root.setAttribute('data-view', v);
+    viewBtns.forEach(function (b) { b.toggleAttribute('data-selected', b.getAttribute('data-view-btn') === v); });
+    if (v === 'edit') { setTab('profile'); enableDrag(true); } else { enableDrag(false); }
+    updateHint();
+  }
+  viewBtns.forEach(function (b) { b.addEventListener('click', function () { setView(b.getAttribute('data-view-btn')); }); });
+
+  /* ════════ Audience switcher ════════ */
+  var audBtns = document.querySelectorAll('[data-aud-btn]');
+  function setAudience(a) {
+    root.setAttribute('data-audience', a);
+    audBtns.forEach(function (b) { b.toggleAttribute('data-selected', b.getAttribute('data-aud-btn') === a); });
+    updateHint();
+  }
+  audBtns.forEach(function (b) { b.addEventListener('click', function () { setAudience(b.getAttribute('data-aud-btn')); }); });
+
+  /* ════════ Audience hint ════════ */
+  var hintText = document.getElementById('audHintText');
+  var hiddenCount = document.getElementById('hiddenCount');
+  var HINTS = {
+    stranger: 'Viewing as a stranger — followers-only and friends-only blocks are not delivered to this viewer at all (server-enforced, not just hidden).',
+    follower: 'Viewing as a follower — friends-only blocks stay invisible. Follow-back makes you mutual friends and unlocks them.',
+    mutual: 'Viewing as a mutual friend — every block is visible, and the guestbook is open for signing.'
+  };
+  function updateHint() {
+    var v = root.getAttribute('data-view'), a = root.getAttribute('data-audience');
+    if (v !== 'visitor') { hiddenCount.textContent = ''; return; }
+    hintText.textContent = HINTS[a];
+    var hidden = a === 'stranger' ? 2 : a === 'follower' ? 1 : 0;
+    hiddenCount.textContent = hidden ? hidden + ' block' + (hidden > 1 ? 's' : '') + ' hidden' : 'all blocks visible';
+  }
+
+  /* ════════ Dark toggle ════════ */
+  document.getElementById('themeToggle').addEventListener('click', function () {
+    if (root.getAttribute('data-theme') === 'dark') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', 'dark');
+  });
+
+  /* ════════ Header tabs → panels ════════ */
+  var tabBtns = document.querySelectorAll('.profile-header .tabs .tab');
+  var panels = document.querySelectorAll('.tab-panel');
+  function setTab(name) {
+    tabBtns.forEach(function (b) { b.toggleAttribute('data-selected', b.dataset.tab === name); });
+    panels.forEach(function (p) { p.toggleAttribute('data-active', p.dataset.tab === name); });
+  }
+  tabBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (root.getAttribute('data-view') === 'edit') { toast('Finish editing to switch tabs'); return; }
+      setTab(b.dataset.tab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  /* ════════ Owner / edit shortcuts ════════ */
+  document.getElementById('customizeBtn').addEventListener('click', function () { setView('edit'); });
+  document.getElementById('editProfileBtn').addEventListener('click', function () { toast('Edit profile — identity fields (name, handle, bio, photo)'); });
+  document.getElementById('saveBtn').addEventListener('click', function () { setView('owner'); toast('Layout saved — your profile is live ✦'); });
+  document.getElementById('discardBtn').addEventListener('click', function () { setView('owner'); toast('Changes discarded'); });
+  document.getElementById('mobilePreviewBtn').addEventListener('click', function () { toast('Mobile preview — blocks collapse left-to-right, top-to-bottom'); });
+
+  /* ════════ Live themes (scoped to the canvas) ════════ */
+  function applyTheme(pt) {
+    if (pt === 'none') { canvas.setAttribute('data-raw', ''); canvas.setAttribute('data-ptheme', 'none'); }
+    else { canvas.removeAttribute('data-raw'); canvas.setAttribute('data-ptheme', pt); }
+  }
+  document.querySelectorAll('.theme-swatches .swatch').forEach(function (s) {
+    s.addEventListener('click', function () {
+      var pt = s.getAttribute('data-ptheme');
+      document.querySelectorAll('.theme-swatches .swatch').forEach(function (x) { x.removeAttribute('data-selected'); });
+      s.setAttribute('data-selected', '');
+      applyTheme(pt);
+      if (pt === 'none') toast('No theme — showing your raw, unstyled content');
+      else if (s.classList.contains('premium')) toast('Premium theme “' + (s.title || '').replace(' — Premium', '') + '” — preview only; upgrade to keep ✦');
+      else toast('Theme applied: ' + (s.title || pt));
+    });
+  });
+
+  /* ════════ Delegated interactions (work on cloned content too) ════════ */
+  document.addEventListener('click', function (e) {
+    /* visibility mini-selects */
+    var vb = e.target.closest('.vis-mini button');
+    if (vb) { var g = vb.closest('.vis-mini'); g.querySelectorAll('button').forEach(function (x) { x.removeAttribute('data-on'); }); vb.setAttribute('data-on', ''); toast('Block visibility → ' + vb.textContent); return; }
+    /* post react toggle */
+    var pa = e.target.closest('.post-action');
+    if (pa && pa.textContent.indexOf('React') > -1) { pa.toggleAttribute('data-active'); return; }
+    /* guestbook post */
+    if (e.target.closest('.gb-post-btn')) { toast('Posted to Maya’s guestbook ♡'); return; }
+    /* guestbook delete */
+    var del = e.target.closest('.note-del');
+    if (del) { var n = del.closest('.note'); n.style.transition = 'opacity .22s, transform .22s'; n.style.opacity = '0'; n.style.transform = 'scale(.9)'; setTimeout(function () { n.remove(); }, 220); toast('Guestbook entry deleted'); return; }
+  });
+  document.addEventListener('input', function (e) {
+    var ta = e.target.closest('.gb-input'); if (!ta) return;
+    var comp = ta.closest('.gb-composer'); if (!comp) return;
+    var prev = comp.querySelector('.gb-preview-text'), cnt = comp.querySelector('.gb-count');
+    if (prev) prev.textContent = ta.value || 'Write something nice…';
+    if (cnt) cnt.textContent = ta.value.length;
+  });
+
+  /* ════════ Drag-to-reorder blocks (edit mode) ════════ */
+  var dragEl = null;
+  function enableDrag(on) {
+    document.querySelectorAll('#panel-profile .block').forEach(function (b) {
+      if (b.classList.contains('profile-header')) return;
+      if (on) b.setAttribute('draggable', 'true'); else b.removeAttribute('draggable');
+    });
+  }
+  function getAfter(container, y) {
+    var els = [].slice.call(container.querySelectorAll(':scope > .block:not(.dragging)'));
+    var closest = { offset: -Infinity, el: null };
+    els.forEach(function (child) {
+      var box = child.getBoundingClientRect();
+      var offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) closest = { offset: offset, el: child };
+    });
+    return closest.el;
+  }
+  document.addEventListener('dragstart', function (e) {
+    var b = e.target.closest('.block');
+    if (!b || b.getAttribute('draggable') !== 'true') return;
+    dragEl = b;
+    setTimeout(function () { b.classList.add('dragging'); }, 0);
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', ''); } catch (_) {}
+  });
+  document.addEventListener('dragend', function () { if (dragEl) { dragEl.classList.remove('dragging'); dragEl = null; } });
+  [].slice.call(document.querySelectorAll('#panel-profile .col, #fullZone')).forEach(function (zone) {
+    zone.addEventListener('dragover', function (e) {
+      if (!dragEl) return;
+      e.preventDefault();
+      var after = getAfter(zone, e.clientY);
+      if (after == null) { if (dragEl.parentElement !== zone || zone.lastElementChild !== dragEl) zone.appendChild(dragEl); }
+      else if (after !== dragEl) zone.insertBefore(dragEl, after);
+    });
+  });
+
+  /* ════════ Add-block modal: widget picker + layout builder ════════ */
+  var WIDGETS = [
+    { n: 'About / Bio', c: 'Profile', i: '≡' }, { n: 'Photo gallery', c: 'Media', i: '▤' },
+    { n: 'Post stream', c: 'Content', i: '✎' }, { n: 'Friends list', c: 'Social', i: '❒' },
+    { n: 'Guestbook', c: 'Social', i: '✉' }, { n: 'Links', c: 'Profile', i: '↗' },
+    { n: 'Status / mood', c: 'Profile', i: '✦' }, { n: 'Quote', c: 'Expression', i: '❝' },
+    { n: 'Countdown', c: 'Expression', i: '◷' }, { n: 'Now playing', c: 'Media', i: '♪', premium: true },
+    { n: 'Sticker wall', c: 'Expression', i: '★', premium: true }, { n: 'Poll', c: 'Content', i: '▧' },
+    { n: 'Map / location', c: 'Profile', i: '⚑' }, { n: 'Button / CTA', c: 'Profile', i: '▭' },
+    { n: 'Marquee banner', c: 'Expression', i: '⇄', premium: true }, { n: 'Divider', c: 'Layout', i: '―' }
+  ];
+  var modal = document.getElementById('blockModal');
+  var widgetGrid = document.getElementById('widgetGrid');
+  var footNote = document.getElementById('modalFootNote');
+  var selectedWidget = null;
+
+  function renderWidgets(q) {
+    q = (q || '').toLowerCase(); widgetGrid.innerHTML = '';
+    var list = WIDGETS.filter(function (w) { return !q || w.n.toLowerCase().indexOf(q) > -1 || w.c.toLowerCase().indexOf(q) > -1; });
+    if (!list.length) { widgetGrid.innerHTML = '<div class="widget-empty">No blocks match “' + q + '”.</div>'; return; }
+    list.forEach(function (w) {
+      var card = document.createElement('button');
+      card.className = 'widget-card'; card.dataset.name = w.n;
+      card.innerHTML = '<span class="wc-icon">' + w.i + '</span><span class="wc-name">' + w.n + '</span><span class="wc-cat">' + w.c + '</span>' + (w.premium ? '<span class="wc-lock">★ Premium</span>' : '');
+      card.addEventListener('click', function () {
+        widgetGrid.querySelectorAll('.widget-card').forEach(function (x) { x.removeAttribute('data-selected'); });
+        card.setAttribute('data-selected', ''); selectedWidget = w;
+        footNote.textContent = w.premium ? '“' + w.n + '” is a premium widget — adds as a preview.' : '“' + w.n + '” selected — click Add to profile.';
+      });
+      widgetGrid.appendChild(card);
+    });
+  }
+  document.getElementById('widgetSearch').addEventListener('input', function (e) { renderWidgets(e.target.value); });
+
+  function setMTab(name) {
+    document.querySelectorAll('.modal-tabs button').forEach(function (b) { b.toggleAttribute('data-selected', b.dataset.mtab === name); });
+    document.querySelectorAll('.mpanel').forEach(function (p) { p.hidden = p.dataset.mpanel !== name; });
+  }
+  document.querySelectorAll('.modal-tabs button').forEach(function (b) { b.addEventListener('click', function () { setMTab(b.dataset.mtab); }); });
+
+  function openModal() { renderWidgets(''); selectedWidget = null; footNote.textContent = 'Pick a widget to add, or switch to Layout to build a custom section.'; setMTab('widgets'); modal.setAttribute('data-open', ''); modal.setAttribute('aria-hidden', 'false'); }
+  function closeModal() { modal.removeAttribute('data-open'); modal.setAttribute('aria-hidden', 'true'); }
+  document.getElementById('addBlockBtn').addEventListener('click', openModal);
+  document.getElementById('blockModalClose').addEventListener('click', closeModal);
+  document.getElementById('blockModalCancel').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.hasAttribute('data-open')) closeModal(); });
+
+  /* Build a new profile block element */
+  function newBlock(title, bodyHTML) {
+    var sec = document.createElement('section');
+    sec.className = 'card block'; sec.setAttribute('data-vis', 'public');
+    sec.innerHTML =
+      '<div class="block-editbar edit-only"><span class="grip" title="Drag to move">⠿</span> ' + title.toUpperCase() +
+      '<span class="vis-mini"><button data-on>Public</button><button>Followers</button><button>Friends</button></span></div>' +
+      '<span class="resize-handle edit-only"></span>' +
+      '<div class="block-head"><h2 class="block-title">' + title + '</h2><span class="badge vis-badge" data-tone="neutral" data-variant="outline">Public</span></div>' +
+      '<div class="block-body">' + bodyHTML + '</div>';
+    if (root.getAttribute('data-view') === 'edit') sec.setAttribute('draggable', 'true');
+    return sec;
+  }
+  function insertWidgetBlock(w) {
+    var body = '<p class="about-text" style="color:var(--color-fg-muted)">New “' + w.n + '” block — placeholder content. Configure it in the editor.</p>';
+    var sec = newBlock(w.n, body);
+    document.querySelector('#panel-profile .col').appendChild(sec);
+    sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function insertLayoutBlock() {
+    var rowsHTML = '';
+    document.querySelectorAll('#lbCanvas .lb-row').forEach(function (row) {
+      var cols = '';
+      row.querySelectorAll('.lb-col').forEach(function (col) {
+        var grow = col.style.flexGrow || '1';
+        var comp = col.getAttribute('data-comp') || 'Empty column';
+        cols += '<div style="flex:' + grow + ' 1 0;min-width:0;border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-4);background:var(--color-bg-subtle);font-size:var(--text-sm);color:var(--color-fg-muted)">' + comp + '</div>';
+      });
+      rowsHTML += '<div style="display:flex;gap:var(--space-3);margin-bottom:var(--space-3)">' + cols + '</div>';
+    });
+    var sec = newBlock('Custom section', rowsHTML);
+    document.getElementById('fullZone').appendChild(sec);
+    document.getElementById('lbCanvas').innerHTML = '';
+    sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  document.getElementById('blockModalAdd').addEventListener('click', function () {
+    var activeMTab = document.querySelector('.modal-tabs button[data-selected]').dataset.mtab;
+    if (activeMTab === 'layout') {
+      if (!document.querySelector('#lbCanvas .lb-row')) { toast('Add at least one row to your layout first'); return; }
+      insertLayoutBlock(); closeModal(); toast('Custom layout added to your profile'); return;
+    }
+    if (!selectedWidget) { toast('Pick a widget or build a layout first'); return; }
+    insertWidgetBlock(selectedWidget); closeModal();
+    toast((selectedWidget.premium ? 'Premium widget added (preview): ' : 'Block added: ') + selectedWidget.n);
+  });
+
+  /* Layout builder */
+  var lbCanvas = document.getElementById('lbCanvas');
+  document.getElementById('lbAddRow').addEventListener('click', function () { addRow(); });
+  function addRow() {
+    var row = document.createElement('div'); row.className = 'lb-row';
+    row.innerHTML = '<div class="lb-row-inner"></div><div class="lb-row-tools"><button data-act="addcol">＋ Add column</button><button data-act="delrow">Delete row</button></div>';
+    lbCanvas.appendChild(row);
+    addCol(row.querySelector('.lb-row-inner'));
+  }
+  function addCol(inner) {
+    if (inner.querySelector('.lb-col')) { var rz = document.createElement('div'); rz.className = 'lb-resizer'; inner.appendChild(rz); }
+    var col = document.createElement('div'); col.className = 'lb-col'; col.style.flexGrow = '1';
+    col.innerHTML = '<div class="lb-col-inner"><button class="lb-add-comp"><span class="p">＋</span>Add component</button></div>';
+    inner.appendChild(col);
+  }
+  function setComp(col, name) {
+    col.setAttribute('data-comp', name);
+    var inner = col.querySelector('.lb-col-inner'); inner.classList.add('filled');
+    inner.innerHTML = '<div class="lb-comp">' + name + ' <button class="x" title="Remove">✕</button></div>';
+  }
+  function closeCompPop() { var p = document.querySelector('.lb-pop'); if (p) p.remove(); }
+  function openCompPop(btn) {
+    closeCompPop();
+    var col = btn.closest('.lb-col');
+    var pop = document.createElement('div'); pop.className = 'lb-pop';
+    pop.innerHTML = '<input placeholder="Search components…"><div class="lb-pop-list"></div>';
+    col.querySelector('.lb-col-inner').appendChild(pop);
+    var list = pop.querySelector('.lb-pop-list'), input = pop.querySelector('input');
+    function fill(q) {
+      q = (q || '').toLowerCase(); list.innerHTML = '';
+      WIDGETS.filter(function (w) { return !q || w.n.toLowerCase().indexOf(q) > -1; }).forEach(function (w) {
+        var b = document.createElement('button'); b.innerHTML = '<span>' + w.i + '</span>' + w.n + (w.premium ? ' ★' : '');
+        b.addEventListener('click', function (ev) { ev.stopPropagation(); setComp(col, w.n); closeCompPop(); });
+        list.appendChild(b);
+      });
+    }
+    input.addEventListener('input', function () { fill(input.value); });
+    input.addEventListener('click', function (ev) { ev.stopPropagation(); });
+    fill(''); setTimeout(function () { input.focus(); }, 0);
+  }
+  lbCanvas.addEventListener('click', function (e) {
+    var act = e.target.closest('[data-act]');
+    if (act) { var row = act.closest('.lb-row'); if (act.dataset.act === 'addcol') addCol(row.querySelector('.lb-row-inner')); else row.remove(); return; }
+    if (e.target.closest('.lb-comp .x')) { var col = e.target.closest('.lb-col'); col.removeAttribute('data-comp'); var inner = col.querySelector('.lb-col-inner'); inner.classList.remove('filled'); inner.innerHTML = '<button class="lb-add-comp"><span class="p">＋</span>Add component</button>'; return; }
+    if (e.target.closest('.lb-add-comp')) { openCompPop(e.target.closest('.lb-add-comp')); return; }
+  });
+  document.addEventListener('click', function (e) { if (!e.target.closest('.lb-pop') && !e.target.closest('.lb-add-comp')) closeCompPop(); });
+  /* Column resize by dragging the handle */
+  lbCanvas.addEventListener('pointerdown', function (e) {
+    var rz = e.target.closest('.lb-resizer'); if (!rz) return;
+    e.preventDefault();
+    var prev = rz.previousElementSibling, next = rz.nextElementSibling;
+    if (!prev || !next) return;
+    var startX = e.clientX;
+    var pg = parseFloat(prev.style.flexGrow || '1'), ng = parseFloat(next.style.flexGrow || '1'), total = pg + ng;
+    var pw = prev.getBoundingClientRect().width, nw = next.getBoundingClientRect().width, combo = pw + nw;
+    function move(ev) {
+      var newPw = Math.max(30, Math.min(combo - 30, pw + (ev.clientX - startX)));
+      var ratio = newPw / combo;
+      prev.style.flexGrow = (total * ratio).toFixed(3);
+      next.style.flexGrow = (total * (1 - ratio)).toFixed(3);
+    }
+    function up() { document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); }
+    document.addEventListener('pointermove', move); document.addEventListener('pointerup', up);
+  });
+
+  /* ════════ Posts tab + pagination ════════ */
+  var POSTS = [
+    { time: '2 hours ago', text: 'Okay, real talk for friends only: I got the job!! Signing the contract tomorrow. Scream quietly with me until it’s official 🎉', vis: 'friends' },
+    { time: 'Yesterday', text: 'Spent the weekend shooting on the old rangefinder. A few frames from the roll — the light was unreal.', img: 'a', tag: 'kodak portra 400 · frame 14' },
+    { time: '3 days ago', text: 'Hot take: the best profile is the one that looks nothing like anyone else’s. That’s the whole reason I’m here and not on the other apps.' },
+    { time: '4 days ago', text: 'Reorganised my whole film shelf by box colour. Peak procrastination, zero regrets.' },
+    { time: '5 days ago', text: 'The October light in Lisbon hits different. Golden hour lasts an actual hour.', img: 'b', tag: 'ericeira · 6pm' },
+    { time: '1 week ago', text: 'Small software win: shaved the profile render down to 40ms. Calm software is fast software.' },
+    { time: '1 week ago', text: 'The guestbook is officially my favourite thing on here. It feels like a fridge door.' },
+    { time: '2 weeks ago', text: 'Coffee report: the tiny place near the tram wins again. Third wave, first love.', img: 'c', tag: 'a bica' },
+    { time: '2 weeks ago', text: 'Note to self: expired film is a feature, not a bug.' },
+    { time: '3 weeks ago', text: 'Started a zine. It’s 8 pages. It’s chaos. I love it.' },
+    { time: '1 month ago', text: 'Hello Orbit. First post. Building my corner slowly ✦' }
+  ];
+  var PER = 4, page = 1;
+  var stream = document.getElementById('postsTabStream'), pagerEl = document.getElementById('postsPager');
+  function postHTML(p) {
+    var img = p.img ? '<div class="post-img" data-p="' + p.img + '"><span class="tag">' + p.tag + '</span></div>' : '';
+    var badge = p.vis === 'friends' ? '<span class="badge" data-tone="pink">♥ Friends only</span>' : '<span class="badge" data-tone="neutral" data-variant="outline">Public</span>';
+    var cls = p.vis === 'friends' ? 'card post friends-only-post' : 'card post';
+    return '<article class="' + cls + '"><div class="post-author"><span class="avatar" data-size="lg" data-hue="purple">MO</span><span class="who"><span class="pname">Maya Okonkwo <span class="badge" data-tone="accent">✓</span></span><span class="ptime">' + p.time + '</span></span>' + badge + '</div><p class="post-text">' + p.text + '</p>' + img + '<div class="post-foot"><button class="post-action">♥ React</button><button class="post-action">Reply</button></div></article>';
+  }
+  function renderPosts() {
+    var total = Math.ceil(POSTS.length / PER);
+    var slice = POSTS.slice((page - 1) * PER, (page - 1) * PER + PER);
+    stream.innerHTML = slice.map(postHTML).join('');
+    var h = '<button class="pg" data-nav="prev"' + (page === 1 ? ' disabled' : '') + '>‹</button>';
+    for (var i = 1; i <= total; i++) h += '<button class="pg" data-page="' + i + '"' + (i === page ? ' data-on' : '') + '>' + i + '</button>';
+    h += '<button class="pg" data-nav="next"' + (page === total ? ' disabled' : '') + '>›</button>';
+    pagerEl.innerHTML = h;
+  }
+  pagerEl.addEventListener('click', function (e) {
+    var b = e.target.closest('.pg'); if (!b || b.disabled) return;
+    var total = Math.ceil(POSTS.length / PER);
+    if (b.dataset.nav === 'prev') page = Math.max(1, page - 1);
+    else if (b.dataset.nav === 'next') page = Math.min(total, page + 1);
+    else page = parseInt(b.dataset.page, 10);
+    renderPosts();
+    document.getElementById('postsTab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  renderPosts();
+
+  /* ════════ Photos tab ════════ */
+  var PHOTOS = [['1', 'porto, kodak gold'], ['2', 'neon, night walk'], ['3', 'golden hour'], ['4', 'the park roll'], ['5', 'blue hour'], ['6', 'spring, expired film'], ['2', 'tram window'], ['3', 'market, 35mm'], ['1', 'harbour'], ['5', 'rooftop, dusk'], ['4', 'pines'], ['6', 'double exposure']];
+  document.getElementById('photosTabGrid').innerHTML = PHOTOS.map(function (p) { return '<span class="photo" data-p="' + p[0] + '"><span class="tag">' + p[1] + '</span></span>'; }).join('');
+
+  /* ════════ Guestbook tab (clone the canonical guestbook) ════════ */
+  var gbSrc = document.getElementById('profileGuestbook');
+  if (gbSrc) {
+    var gbClone = gbSrc.cloneNode(true);
+    gbClone.removeAttribute('id');
+    var eb = gbClone.querySelector('.block-editbar'); if (eb) eb.remove();
+    var rh = gbClone.querySelector('.resize-handle'); if (rh) rh.remove();
+    document.getElementById('guestbookTab').appendChild(gbClone);
+  }
+
+  updateHint();
+})();
+</script>
+</body>
+</html>
