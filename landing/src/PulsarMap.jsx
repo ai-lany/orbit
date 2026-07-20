@@ -175,6 +175,13 @@ function draw(ctx, w, h, t, rotExtra = 0, scaleExtra = 1, theme = 'dark') {
 
 export function PulsarMap({ theme = 'dark' }) {
   const canvasRef = useRef(null);
+  // Latest theme, read live by the render loop so a toggle just recolors the
+  // next frame instead of tearing down and rebuilding the whole effect.
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
+  // Set by the effect so the theme effect below can force an immediate redraw
+  // (needed under reduced motion, where there is no animation loop).
+  const redrawRef = useRef(() => {});
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -190,6 +197,10 @@ export function PulsarMap({ theme = 'dark' }) {
     let scaleExtra = 1;
     const FRAME = 1000 / 15;
 
+    function render(t) {
+      draw(ctx, w, h, t, rotExtra, scaleExtra, themeRef.current);
+    }
+
     function resize() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = parent.clientWidth;
@@ -201,17 +212,29 @@ export function PulsarMap({ theme = 'dark' }) {
       const ratio = w / h;
       rotExtra = (ratio - 1) * 15;
       scaleExtra = 1 + Math.abs(ratio - 1) * 0.15;
-      draw(ctx, w, h, reduced ? 1.2 : performance.now() / 1000, rotExtra, scaleExtra, theme);
+      render(reduced ? 1.2 : performance.now() / 1000);
     }
+    redrawRef.current = () => render(reduced ? 1.2 : performance.now() / 1000);
 
     const ro = new ResizeObserver(resize);
     ro.observe(parent);
     resize();
 
+    // Re-run resize when the device pixel ratio changes (e.g. the window is
+    // dragged to a monitor of different density) even if the CSS size doesn't.
+    let dprQuery;
+    function onDprChange() { resize(); watchDpr(); }
+    function watchDpr() {
+      if (dprQuery) dprQuery.removeEventListener('change', onDprChange);
+      dprQuery = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+      dprQuery.addEventListener('change', onDprChange);
+    }
+    watchDpr();
+
     if (!reduced) {
       const loop = (ts) => {
         if (ts - last >= FRAME) {
-          draw(ctx, w, h, ts / 1000, rotExtra, scaleExtra, theme);
+          render(ts / 1000);
           last = ts;
         }
         raf = requestAnimationFrame(loop);
@@ -222,7 +245,13 @@ export function PulsarMap({ theme = 'dark' }) {
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      if (dprQuery) dprQuery.removeEventListener('change', onDprChange);
     };
+  }, []); // set up once; theme is read live via themeRef
+
+  // A theme toggle just redraws — no loop/observer teardown.
+  useEffect(() => {
+    redrawRef.current();
   }, [theme]);
 
   return (

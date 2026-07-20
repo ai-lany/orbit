@@ -21,51 +21,47 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      # orbit consumes the design system via `file:../Design-System`, so both
-      # repos are checked out as siblings under the workspace and the design
-      # system is built first for the link to resolve.
+      # The landing app (orbit/landing) consumes the design system via
+      # `file:../Design-System`, which resolves to orbit/Design-System. We
+      # check the design system out there, pinned to the commit recorded by
+      # the `Design-System` submodule, and build it first so the link resolves.
       - name: Checkout orbit
         uses: actions/checkout@v4
         with:
           path: orbit
 
-      - name: Checkout design system
+      - name: Checkout design system (pinned to the submodule commit)
         uses: actions/checkout@v4
         with:
           repository: ai-lany/Design-System
-          ref: master
-          path: Design-System
+          ref: a09161144e84b64155b3c97512d4553028d6ec79
+          path: orbit/Design-System
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
           cache-dependency-path: |
-            orbit/package-lock.json
-            Design-System/package-lock.json
+            orbit/landing/package-lock.json
+            orbit/Design-System/package-lock.json
 
       - name: Build design system (linked dependency)
-        working-directory: Design-System
+        working-directory: orbit/Design-System
         run: |
           npm ci
           npm run build
 
-      - name: Build orbit
-        working-directory: orbit
+      - name: Build landing
+        working-directory: orbit/landing
         run: |
           npm ci
           npm run build
-
-      # GitHub Pages has no server-side routing; serve the SPA for unknown
-      # paths so deep links like /orbit/profile work on reload.
-      - name: SPA fallback for client-side routes
-        run: cp orbit/dist/index.html orbit/dist/404.html
 
       - uses: actions/configure-pages@v4
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: orbit/dist
+          path: orbit/landing/dist
 
       - uses: actions/deploy-pages@v4
         id: deployment

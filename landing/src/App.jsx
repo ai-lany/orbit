@@ -38,14 +38,13 @@ export function App() {
       <PulsarMap theme={theme} />
 
       <nav className="nav" aria-label="Main" ref={navRef}>
-        <a className="brand" href="/" aria-label="Orbit home">
+        <a className="brand" href={import.meta.env.BASE_URL} aria-label="Orbit home">
           <PixelMark name="star" size={16} />
           <span className="brandName">Orbit</span>
         </a>
         <div className="navLinks">
           <Link variant="nav" href="#make">Your space</Link>
           <Link variant="nav" href="#guestbook">Guestbook</Link>
-          <Button variant="ghost" size="sm">Sign in</Button>
           <Button variant="primary" size="sm" onClick={() => scrollToId('join')}>
             Get early access
           </Button>

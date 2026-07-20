@@ -1,0 +1,8 @@
+[submodule "Design-System"]
+	path = Design-System
+	url = https://github.com/ai-lany/Design-System.git
+	branch = master
+[submodule "templating-language"]
+	path = templating-language
+	url = https://github.com/ai-lany/templating-language.git
+	branch = master

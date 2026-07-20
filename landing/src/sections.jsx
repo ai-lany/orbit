@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  Avatar,
-  Badge,
   Button,
-  Card,
   Chip,
   Input,
   PixelMark,
@@ -60,8 +57,6 @@ function Kicker({ children }) {
   );
 }
 
-const Check = () => <PixelMark name="arrow" size={16} />;
-
 /* ══ Anti-metric strip — the growth dashboard, subverted ═════════════════════ */
 
 const METRICS = [
@@ -114,7 +109,7 @@ function ProfilePreview({ theme }) {
           <div className="previewName">Ailany</div>
           <div className="previewHandle">@ailany</div>
         </div>
-        <button className="previewFollow" type="button" tabIndex={-1}>Follow</button>
+        <button className="previewFollow" type="button" tabIndex={-1} aria-hidden="true">Follow</button>
       </div>
       <div className="previewMood">✷ building orbit</div>
       <div className="previewBlocks">
@@ -166,8 +161,8 @@ function BlockEditor() {
         />
       </div>
       <p className="blocksHint">
-        drag to reorder · set who sees each block · rearrange on your phone,
-        fine-tune the 2D layout on desktop
+        drag to reorder · set who sees each block · fine-tune your 2D layout
+        on desktop
       </p>
     </div>
   );
@@ -220,12 +215,12 @@ function MakeItYours() {
 /* ══ Guestbook — the signature: a wall of pinned sticky notes ═══════════════ */
 
 const NOTES = [
-  { color: 'yellow', rot: -4, text: '**welcome to my orbit** ✷\n\nrepainted the whole place teal today. no regrets.' },
-  { color: 'pink',   rot: 3,  text: 'ok a guestbook is *so* much better than a like button' },
-  { color: 'blue',   rot: -2, text: 'found you on the featured page — your layout goes hard 🔥' },
-  { color: 'green',  rot: 4,  text: 'no ads?? no algorithm?? in THIS economy???' },
-  { color: 'purple', rot: -3, text: 'signed ♥ now come sign mine back, friend' },
-  { color: 'yellow', rot: 2,  text: 'i forgot the internet could feel like this. thank you.' },
+  { id: 'welcome', color: 'yellow', rot: -4, text: '**welcome to my orbit** ✷\n\nrepainted the whole place teal today. no regrets.' },
+  { id: 'guestbook-beats-likes', color: 'pink', rot: 3, text: 'ok a guestbook is *so* much better than a like button' },
+  { id: 'featured', color: 'blue', rot: -2, text: 'found you on the featured page — your layout goes hard 🔥' },
+  { id: 'no-ads', color: 'green', rot: 4, text: 'no ads?? no algorithm?? in THIS economy???' },
+  { id: 'sign-back', color: 'purple', rot: -3, text: 'signed ♥ now come sign mine back, friend' },
+  { id: 'feels-like-home', color: 'yellow', rot: 2, text: 'i forgot the internet could feel like this. thank you.' },
 ];
 
 const GB_STYLES = ['Sticky notes', 'Chat bubbles', 'Handwritten letters'];
@@ -250,8 +245,8 @@ function Guestbook() {
         </Reveal>
 
         <Reveal className="wall">
-          {NOTES.map((n, i) => (
-            <div className="pin" style={{ '--rot': `${n.rot}deg` }} key={i}>
+          {NOTES.map((n) => (
+            <div className="pin" style={{ '--rot': `${n.rot}deg` }} key={n.id}>
               <StickyNote color={n.color} size="sm" readOnly value={n.text} />
             </div>
           ))}
@@ -270,48 +265,6 @@ function Guestbook() {
     </section>
   );
 }
-
-/* ══ Friends, not followers — the model + the chronological feed ════════════ */
-
-const STEPS = [
-  { name: 'You', head: 'You follow someone', sub: 'Anyone public. No request, no waiting.' },
-  { name: 'Mona', head: 'They follow back', sub: 'Now you’re mutual friends. Orbit tells you both.' },
-];
-
-const POSTS = [
-  { name: 'You',  time: '2m', text: 'repainted my whole profile teal. thoughts?', badge: 'Friends only' },
-  { name: 'Mona', time: '1h', text: 'guestbook is officially open. be nice ♥' },
-  { name: 'Devi', time: '5h', text: 'matched 12 people from my contacts already. wild.' },
-  { name: 'Ko',   time: '1d', text: 'day one on orbit. it’s so quiet here. i love it.' },
-];
-
-
-/* ══ Private by default — trust cards ═══════════════════════════════════════ */
-
-const TRUST = [
-  {
-    icon: 'dot',
-    title: 'See who sees what',
-    body: 'Set every block to Public, Followers, or Friends. Friends-only blocks aren’t just CSS-hidden — strangers never receive the HTML at all.',
-  },
-  {
-    icon: 'star',
-    title: 'Contacts stay on your phone',
-    body: 'We find friends by hashing numbers on your device. Raw contacts never reach our servers, and nothing is stored once the match is done.',
-  },
-  {
-    icon: 'bolt',
-    title: 'Block & report, everywhere',
-    body: 'One tap on any post, profile, guestbook note, or DM. Blocking is instant and total — they can’t re-follow you or see your space.',
-  },
-];
-
-
-/* ══ Pricing — free forever, fancy if you want ══════════════════════════════ */
-
-const FREE = ['Every social feature, forever', '8+ starter themes', 'Drag-and-drop block editor', 'Guestbook + friends-only DMs', 'Strictly chronological feed'];
-const PLUS = ['Exclusive & animated themes', 'Custom fonts — all of them', 'Extra guestbook styles', 'A little ✦ profile badge', 'First dibs on new cosmetics'];
-
 
 /* ══ Early access CTA ═══════════════════════════════════════════════════════ */
 
@@ -335,12 +288,18 @@ function EarlyAccess() {
             before someone cooler does.
           </p>
 
-          {done ? (
-            <div className="success" role="status">
-              <PixelMark name="star" size={16} />
-              You’re on the list. Invites go out weekly — watch your inbox. ✦
-            </div>
-          ) : (
+          {/* Live region stays mounted (empty until success) so assistive tech
+              reliably announces the confirmation when it appears. */}
+          <div className="ctaFeedback" role="status" aria-live="polite">
+            {done && (
+              <span className="success">
+                <PixelMark name="star" size={16} />
+                You’re on the list. Invites go out weekly — watch your inbox. ✦
+              </span>
+            )}
+          </div>
+
+          {!done && (
             <form className="form" onSubmit={handleSubmit}>
               <Input
                 className="formField"
@@ -365,14 +324,14 @@ function EarlyAccess() {
 
 /* ══ Footer ═════════════════════════════════════════════════════════════════ */
 
-const SOMEDAY = ['Top Friends ✦', 'Music player', 'Video posts', 'Custom HTML/CSS'];
+const SOMEDAY = ['Top Friends ✦', 'Music player', 'Video posts'];
 
 function Footer() {
   return (
     <footer className="footer">
       <div className="footerInner">
         <div className="footerCol">
-          <a className="brand" href="/" aria-label="Orbit home">
+          <a className="brand" href={import.meta.env.BASE_URL} aria-label="Orbit home">
             <PixelMark name="star" size={16} />
             <span className="brandName">Orbit</span>
           </a>

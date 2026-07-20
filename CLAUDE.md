@@ -16,6 +16,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 There is no workspace tooling tying these together. Each directory is worked on independently.
 
+`Design-System/` and `templating-language/` are **git submodules** (each its own repo); `landing/` and `docs/` live directly in this repo. Clone with `git clone --recurse-submodules`, or run `git submodule update --init` in an existing checkout, or those two directories will be empty. Each submodule repo also deploys its own GitHub Pages site (the design system's example/docs page, the templating language's Profile Studio editor); this repo's Pages deploy only builds `landing/`.
+
 ## Commands
 
 Each sub-project is run from its own directory. There is no root-level build or dev command.
@@ -70,7 +72,7 @@ Design-System  ←  landing
 
 ### templating-language
 
-- The data model is `Profile = { theme, blocks[] }` where every `Block` has `{ type, attrs, text?, children[] }` — a plain serializable tree.
+- The data model is `Profile = { theme, blocks[] }` where every `Block` has `{ id, type, attrs, text?, children[] }` — a plain serializable tree. Each node carries a **named, stable, human-readable `id`** (authored in the template, with a readable derived fallback), surfaced in the editor and emitted as the rendered HTML `id`; see the v2 PRD §8.3.4.
 - `src/parse.ts` converts the bracket-tag DSL to a `Profile`; `src/serialize.ts` converts it back. Both are generic — adding a new block type requires no changes to either.
 - `src/blocks/` contains one component per type plus `registry.tsx`, `render.tsx`, and `attrs.ts`. `render.tsx`'s `BlockView` is the single recursion point; containers just render `{children}`.
 - Theme overrides land as inline CSS variables on the profile wrapper (SSR-safe, supports multiple profiles per page).
