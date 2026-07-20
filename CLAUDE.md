@@ -12,6 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `templating-language/` | Profile templating language + renderer (`@your-org/profile-templating-language`) |
 | `landing/` | Marketing landing page (React, consumes the design system) |
 | `docs/` | PRDs and other planning documents |
+| `mockups/` | Static HTML mockups for design reference |
 
 There is no workspace tooling tying these together. Each directory is worked on independently.
 
