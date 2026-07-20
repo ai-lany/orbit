@@ -30,11 +30,18 @@ jobs:
         with:
           path: orbit
 
-      - name: Checkout design system (pinned to the submodule commit)
+      # Build the exact design-system commit the `Design-System` submodule points
+      # at, read from the gitlink — so bumping the pointer flows to the deploy
+      # with no second place to update.
+      - name: Resolve pinned design-system commit
+        id: ds
+        run: echo "sha=$(git -C orbit ls-tree HEAD Design-System | awk '{print $3}')" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout design system (at the pinned submodule commit)
         uses: actions/checkout@v4
         with:
           repository: ai-lany/Design-System
-          ref: a09161144e84b64155b3c97512d4553028d6ec79
+          ref: ${{ steps.ds.outputs.sha }}
           path: orbit/Design-System
 
       - uses: actions/setup-node@v4
