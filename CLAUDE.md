@@ -1,89 +1,89 @@
 # CLAUDE.md
 
-Guidance for working in the `orbit` repo.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## What this is
 
-`orbit` will become a social media app. Right now it hosts a small set of **reusable
-React components** for that app, built on top of the sibling design system
-`@your-org/design-system` (repo at `../Design-System`), wired together into a small
-runnable app (Home + Profile routes).
+**Orbit** is a social network (working title) centered on deep profile customization and a chronological, algorithm-free feed. The repo is a monorepo with four directories — each is an independent package with its own git repo, `package.json`, and (where relevant) its own `CLAUDE.md`:
+
+| Directory | Purpose |
+|-----------|---------|
+| `Design-System/` | React + TypeScript component library (`@your-org/design-system`) |
+| `templating-language/` | Profile templating language + renderer (`@your-org/profile-templating-language`) |
+| `landing/` | Marketing landing page (React, consumes the design system) |
+| `docs/` | PRDs and other planning documents |
+
+There is no workspace tooling tying these together. Each directory is worked on independently.
 
 ## Commands
 
-```bash
-npm run dev          # Vite dev server (app routes: / and /profile)
-npm run build        # tsc --noEmit then vite build
-npm run typecheck    # tsc --noEmit (strict — must pass before pushing)
-npm run preview      # preview the production build
-```
+Each sub-project is run from its own directory. There is no root-level build or dev command.
 
-There are no tests and no lint script.
-
-## Deployment (GitHub Pages)
-
-`.github/workflows/deploy.yml` deploys to Pages on every push to `main`. Since the
-design system is a `file:../Design-System` dependency, the workflow checks out
-`ai-lany/Design-System` (master) as a sibling and builds it before building orbit.
-`vite.config.ts` uses `base: '/orbit/'` for production only (dev stays at `/`), the
-router's `basename` follows `import.meta.env.BASE_URL`, and the workflow copies
-`index.html` → `404.html` as an SPA fallback for client-side routes. One-time: set
-**Settings → Pages → Source** to **GitHub Actions**.
-
-## Design-system dependency
-
-The design system is consumed as a local file link: `"@your-org/design-system":
-"file:../Design-System"`. Its `dist/` must be built once for the link to resolve:
+### Design-System
 
 ```bash
-cd ../Design-System && npm install && npm run build
+cd Design-System
+npm run dev          # Vite dev server for the docs/example page
+npm run build        # build the library (tsup → dist/)
+npm run build:docs   # build the static docs site
+npm run typecheck    # tsc --noEmit (must pass before pushing)
 ```
 
-Design-system tokens, reset, fonts, and component CSS are imported once in
-`src/main.tsx` via `import '@your-org/design-system/dist/index.css'`.
+### templating-language
 
-> Note: because it's a local file link, a standalone clone of `orbit` (with no sibling
-> `Design-System` checkout) won't install. Publishing the design system or moving both
-> repos into a workspace is a later step.
+```bash
+cd templating-language
+npm install          # always npm install, no lockfile committed
+npm run dev          # live "Profile Studio" editor
+npm run build        # build the library (tsup → dist/)
+npm run build:docs   # build the static editor/demo site
+npm run typecheck    # tsc --noEmit (must pass before pushing)
+```
 
-## Component conventions (mirror the design system)
+### landing
 
-Each component lives in `src/components/<Name>/` with three files: `<Name>.tsx`,
-`<Name>.module.css`, and `index.ts` (barrel). Follow the design system's patterns:
+```bash
+cd landing
+npm run dev          # Vite dev server on port 5173 (strictPort)
+npm run build        # production build
+```
 
-- `forwardRef` for the root DOM element; spread `...rest` onto it.
-- Extend the right HTML attributes interface (`Omit<...>` when a prop conflicts).
-- Drive variants/state via `data-*` attributes styled in the CSS module — not JS branches.
-- Merge classNames with `cn()` from `@your-org/design-system`.
-- **Use design-system semantic tokens only** in CSS (`--color-*`, `--space-*`, `--radius-*`,
-  `--text-*`, `--weight-*`, `--shadow-*`, `--z-*`). Never hard-code colors or spacing.
-- Compose from existing design-system components rather than re-implementing primitives.
+## Architecture
 
-Dark mode needs no per-component logic: it follows a `data-theme="dark"` ancestor
-(the demo page toggles this on its root wrapper).
+### Dependency chain
 
-Shared domain types live in `src/types.ts`. The public API is re-exported from `src/index.ts`.
+```
+Design-System  ←  templating-language  ←  (future app)
+Design-System  ←  landing
+```
 
-## Components
+`templating-language` depends on `@your-org/design-system` as a **git dependency** (`github:ai-lany/design-system#master`). Running `npm install` inside `templating-language/` triggers the design system's `prepare` script, which builds it automatically. When working on both packages locally, use `npm install ../Design-System` or link them to avoid stale dist files.
 
-- `PhotoGrid` — CSS-grid gallery with adjustable `cols`/`rows`/`gap`/`aspect`, plus
-  loading (skeleton) and empty states.
-- `PostCard` — a post built from the design system `Card` compound: author row, body,
-  single image or nested `PhotoGrid`, and like/comment/share actions.
-- `Feed` — vertical list of `PostCard`s with loading skeletons, empty state, and load-more.
-- `ProfileHeader` — cover, avatar, name/handle/verified, bio, stat row, and section tabs.
-- `PostComposer` — avatar + textarea + Post button with a character counter.
+### Design-System
 
-## App structure (demo shell around the components)
+- Two-layer CSS token system in `src/styles/tokens.css`: **primitives** (`--gray-*`, `--accent-*`, …) and **semantic tokens** (`--color-bg`, `--color-accent`, `--space-*`, etc.). Components use semantic tokens only — never primitives.
+- Dark mode via `data-theme="dark"` on any ancestor; no component-level dark mode logic.
+- Component pattern: `src/components/<Name>/` with `<Name>.tsx`, `<Name>.module.css`, `index.ts`. Variants are styled via `data-*` attribute selectors (e.g., `.button[data-variant='primary']`), not extra CSS classes.
+- All public exports go through `src/index.ts`; CSS (`fonts.css`, `tokens.css`, `reset.css`) is also imported there so consumers need only `dist/index.css`.
+- See `Design-System/CLAUDE.md` for the full component conventions.
 
-The reusable components above live in `src/components/`. The runnable app that wires
-them together is intentionally separate:
+### templating-language
 
-- `src/app/AppState.tsx` — a small React context holding demo state (`user`, `posts`,
-  `theme`) and actions (`toggleLike`, `toggleFollow`, `addPost`). Use `useAppState()`.
-- `src/app/Layout.tsx` — the nav shell (brand, Home/Profile `NavLink`s, dark toggle) with
-  a router `<Outlet />`. Dark mode is set via `data-theme` on the shell root.
-- `src/pages/` — `HomePage` (composer + feed) and `ProfilePage` (header + tab-filtered feed).
-- `src/App.tsx` — the route table; `src/main.tsx` wraps it in `<BrowserRouter>`.
+- The data model is `Profile = { theme, blocks[] }` where every `Block` has `{ type, attrs, text?, children[] }` — a plain serializable tree.
+- `src/parse.ts` converts the bracket-tag DSL to a `Profile`; `src/serialize.ts` converts it back. Both are generic — adding a new block type requires no changes to either.
+- `src/blocks/` contains one component per type plus `registry.tsx`, `render.tsx`, and `attrs.ts`. `render.tsx`'s `BlockView` is the single recursion point; containers just render `{children}`.
+- Theme overrides land as inline CSS variables on the profile wrapper (SSR-safe, supports multiple profiles per page).
+- See `templating-language/CLAUDE.md` for the full architecture and "adding a block type" steps.
 
-Routing uses `react-router-dom` v6. Mock demo data lives in `src/mock/data.ts`.
+### Fonts (Design-System)
+
+Fonts are not tracked in version control. Clone the Funnel typeface into `Design-System/fonts/` if needed:
+
+```bash
+git clone https://github.com/Dicotype/Funnel.git Design-System/fonts/Funnel
+# then move fonts/Funnel/fonts/Funnel_1001, Funnel_Display, Funnel_Sans into Design-System/fonts/
+```
+
+## Key product context
+
+The v2 PRD (`docs/prds/orbit-prd-v2.md`) describes the overall product vision. The relevant architectural decision: Orbit's advanced customization mode is deliberately **not** a raw HTML/CSS editor — users interact only with known Orbit components via the templating language. This is a permanent product decision.
