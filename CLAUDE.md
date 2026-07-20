@@ -18,6 +18,38 @@ There is no workspace tooling tying these together. Each directory is worked on 
 
 `Design-System/` and `templating-language/` are **git submodules** (each its own repo); `landing/` and `docs/` live directly in this repo. Clone with `git clone --recurse-submodules`, or run `git submodule update --init` in an existing checkout, or those two directories will be empty. Each submodule repo also deploys its own GitHub Pages site (the design system's example/docs page, the templating language's Profile Studio editor); this repo's Pages deploy only builds `landing/`.
 
+## Working with the submodules
+
+The submodule folder (`Design-System/`, `templating-language/`) **is** a live checkout of the child repo — editing files there edits the child. Orbit only records *which child commit it is pinned to*; that pointer moves only when you commit it. There is no automatic mirror. Keep changes flowing in both directions like this:
+
+**One-time setup per clone** (not stored in the repo, so run it after cloning):
+
+```bash
+git clone --recurse-submodules <orbit-url>    # or: git submodule update --init
+git config push.recurseSubmodules on-demand   # pushing orbit auto-pushes child commits it needs
+git config submodule.recurse true             # pull/checkout/switch recurse into submodules
+git config status.submoduleSummary true       # git status shows what changed in each child
+git config diff.submodule log                 # git diff shows child commit logs, not just SHAs
+```
+
+**Edited child files while working in orbit → land them in the child repo and reflect in orbit:**
+
+```bash
+cd templating-language
+git add -A && git commit -m "…" && git push   # commit to the CHILD repo first (also runs its Pages deploy)
+cd ..
+git add templating-language && git commit -m "Bump templating-language" && git push
+```
+
+**Child repo advanced on its own remote → pull it into orbit's pointer:**
+
+```bash
+git submodule update --remote --merge templating-language   # follows the branch in .gitmodules (master)
+git add templating-language && git commit -m "Update templating-language to latest" && git push
+```
+
+Always push the child **before** (or with `push.recurseSubmodules on-demand`, alongside) the orbit pointer bump — otherwise orbit points at a commit no one else (or CI) can fetch. The Pages deploy (`.github/workflows/deploy.yml`) reads the `Design-System` pointer from the gitlink, so bumping the pointer is all it takes to deploy a new design-system commit.
+
 ## Commands
 
 Each sub-project is run from its own directory. There is no root-level build or dev command.
