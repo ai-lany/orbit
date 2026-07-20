@@ -270,7 +270,7 @@ img { display:block; max-width:100%; }
 
 /* ════════════════════ Edit toolbar ════════════════════ */
 .edit-toolbar {
-  display:none; position:sticky; top:53px; z-index:calc(var(--z-sticky) - 1);
+  display:none; position:sticky; top:var(--demo-bar-h, 53px); z-index:calc(var(--z-sticky) - 1);
   background:var(--color-accent-subtle);
   border-bottom:1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
 }
@@ -317,7 +317,10 @@ img { display:block; max-width:100%; }
 }
 [data-view='visitor'] .aud-hint { display:flex; }
 
-/* ════════════════════ Visibility rules (PRD: per-block, server-enforced) ════════════════════ */
+/* ════════════════════ Visibility rules (PRD: per-block, server-enforced) ════════════════════
+   The authoritative model is in JS (applyVisibility): restricted blocks are
+   REMOVED from the DOM for viewers who may not see them — never delivered, not
+   merely hidden. These display:none rules are only a pre-JS anti-flash guard. */
 [data-view='visitor'][data-audience='stranger'] [data-vis='followers'],
 [data-view='visitor'][data-audience='stranger'] [data-vis='friends'],
 [data-view='visitor'][data-audience='follower'] [data-vis='friends'] { display:none; }
@@ -435,7 +438,7 @@ img { display:block; max-width:100%; }
   transition:transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
 }
 .photo:hover { transform:translateY(-2px) scale(1.01); box-shadow:var(--shadow-md); }
-.photo .tag { font-size:10px; font-weight:var(--weight-semibold); color:rgba(255,255,255,.92); text-shadow:0 1px 2px rgba(0,0,0,.35); }
+.photo .tag { font-size:10px; font-weight:var(--weight-semibold); color:#fff; background:rgba(0,0,0,.45); padding:2px 6px; border-radius:var(--radius-sm); }
 .photo[data-p='1'] { background:linear-gradient(135deg,#9180fb,#4e33c4); }
 .photo[data-p='2'] { background:linear-gradient(160deg,#ff5ecb,#7b61ff); }
 .photo[data-p='3'] { background:linear-gradient(140deg,#f0a51b,#e73128); }
@@ -455,7 +458,9 @@ img { display:block; max-width:100%; }
 .post-text { margin:var(--space-3) 0 0; font-size:var(--text-sm); }
 .post-img { margin-top:var(--space-3); height:180px; border-radius:var(--radius-md); position:relative; overflow:hidden; }
 .post-img[data-p='a'] { background:linear-gradient(120deg,#7b61ff,#ff5ecb 60%,#f0a51b); }
-.post-img .tag { position:absolute; left:10px; bottom:8px; font-size:10px; font-weight:var(--weight-semibold); color:rgba(255,255,255,.92); text-shadow:0 1px 2px rgba(0,0,0,.35); }
+.post-img[data-p='b'] { background:linear-gradient(120deg,#f0a51b,#ff5ecb 55%,#7b61ff); }
+.post-img[data-p='c'] { background:linear-gradient(120deg,#2ed44a,#60a5fa 55%,#7b61ff); }
+.post-img .tag { position:absolute; left:10px; bottom:8px; font-size:10px; font-weight:var(--weight-semibold); color:#fff; background:rgba(0,0,0,.45); padding:2px 6px; border-radius:var(--radius-sm); }
 .post-foot { display:flex; align-items:center; gap:var(--space-2); margin-top:var(--space-3); }
 .post-action {
   display:inline-flex; align-items:center; gap:6px; border:none; background:transparent;
@@ -669,7 +674,7 @@ img { display:block; max-width:100%; }
 .profile-canvas[data-raw] .photo,
 .profile-canvas[data-raw] .post-img { background:#e2e2e2 !important; border:1px solid #b8b8b8; border-radius:0; filter:none; }
 .profile-canvas[data-raw] .photo .tag,
-.profile-canvas[data-raw] .post-img .tag { color:#444; text-shadow:none; }
+.profile-canvas[data-raw] .post-img .tag { color:#444; text-shadow:none; background:transparent; padding:0; }
 .profile-canvas[data-raw] .badge,
 .profile-canvas[data-raw] .chip { background:transparent !important; border:1px solid #999; color:#333 !important; border-radius:0; }
 [data-theme='dark'] .profile-canvas[data-raw] .badge,
@@ -808,7 +813,7 @@ img { display:block; max-width:100%; }
 <div class="demo-bar">
   <span class="label">Mockup controls</span>
   <div class="demo-group">
-    <div class="seg" id="viewSeg" role="tablist" aria-label="View">
+    <div class="seg" id="viewSeg" role="group" aria-label="View">
       <button data-view-btn="visitor" data-selected>Visitor view</button>
       <button data-view-btn="owner">Owner view</button>
       <button data-view-btn="edit">Edit mode</button>
@@ -929,11 +934,11 @@ img { display:block; max-width:100%; }
         <span class="stat"><span class="value">312</span><span class="label">Following</span></span>
         <span class="stat"><span class="value">86</span><span class="label"><span class="dot"></span>Mutual friends</span></span>
       </div>
-      <div class="tabs" style="margin-top:var(--space-2)">
-        <button class="tab" data-tab="profile" data-selected>Profile</button>
-        <button class="tab" data-tab="posts">Posts</button>
-        <button class="tab" data-tab="photos">Photos</button>
-        <button class="tab" data-tab="guestbook">Guestbook</button>
+      <div class="tabs" role="tablist" aria-label="Profile sections" style="margin-top:var(--space-2)">
+        <button class="tab" id="tab-profile" role="tab" aria-selected="true" aria-controls="panel-profile" data-tab="profile" data-selected>Profile</button>
+        <button class="tab" id="tab-posts" role="tab" aria-selected="false" aria-controls="panel-posts" data-tab="posts">Posts</button>
+        <button class="tab" id="tab-photos" role="tab" aria-selected="false" aria-controls="panel-photos" data-tab="photos">Photos</button>
+        <button class="tab" id="tab-guestbook" role="tab" aria-selected="false" aria-controls="panel-guestbook" data-tab="guestbook">Guestbook</button>
       </div>
     </div>
   </header>
@@ -941,7 +946,7 @@ img { display:block; max-width:100%; }
   <div class="tab-panels">
 
   <!-- ░░ Tab: Profile — the full arranged layout ░░ -->
-  <div class="tab-panel" id="panel-profile" data-tab="profile" data-active>
+  <div class="tab-panel" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile" data-tab="profile" data-active>
 
   <div class="columns">
     <!-- ═══════════ Left column ═══════════ -->
@@ -1209,7 +1214,7 @@ img { display:block; max-width:100%; }
   </div><!-- /tab: profile -->
 
   <!-- ░░ Tab: Posts — post stream + pagination ░░ -->
-  <div class="tab-panel" data-tab="posts">
+  <div class="tab-panel" id="panel-posts" role="tabpanel" aria-labelledby="tab-posts" data-tab="posts">
     <div class="posts-tab" id="postsTab">
       <h2 class="tab-title">Posts</h2>
       <div class="post-stream" id="postsTabStream"></div>
@@ -1218,7 +1223,7 @@ img { display:block; max-width:100%; }
   </div>
 
   <!-- ░░ Tab: Photos ░░ -->
-  <div class="tab-panel" data-tab="photos">
+  <div class="tab-panel" id="panel-photos" role="tabpanel" aria-labelledby="tab-photos" data-tab="photos">
     <div class="photos-tab">
       <h2 class="tab-title">Photos</h2>
       <section class="card block" data-vis="public">
@@ -1230,7 +1235,7 @@ img { display:block; max-width:100%; }
   </div>
 
   <!-- ░░ Tab: Guestbook ░░ -->
-  <div class="tab-panel" data-tab="guestbook">
+  <div class="tab-panel" id="panel-guestbook" role="tabpanel" aria-labelledby="tab-guestbook" data-tab="guestbook">
     <div class="guestbook-tab" id="guestbookTab"></div>
   </div>
 
@@ -1241,7 +1246,7 @@ img { display:block; max-width:100%; }
 
   <!-- ═══════════ Add-block modal (block picker + layout builder) ═══════════ -->
   <div class="modal-overlay" id="blockModal" aria-hidden="true">
-    <div class="modal" role="dialog" aria-label="Add a block">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Add a block">
       <div class="modal-head">
         <h3>Add a block</h3>
         <div class="modal-tabs">
@@ -1285,13 +1290,45 @@ img { display:block; max-width:100%; }
     toastTimer = setTimeout(function () { toastEl.removeAttribute('data-show'); }, 2600);
   }
 
+  /* ════════ Server-enforced visibility model ════════
+     Restricted blocks are REMOVED from the DOM for viewers who may not see them
+     (matching the PRD: friends/followers-only nodes are stripped server-side and
+     never delivered — not merely CSS-hidden), then re-inserted, in place, when the
+     viewer is allowed. A comment node holds each removed element's slot. */
+  var detachedNodes = [];
+  function canSee(vis, view, aud) {
+    if (view !== 'visitor') return true;               // owner / edit see everything
+    if (vis === 'followers') return aud === 'follower' || aud === 'mutual';
+    if (vis === 'friends') return aud === 'mutual';
+    return true;                                        // public / unset
+  }
+  function visOf(el) {
+    if (el.hasAttribute('data-vis')) return el.getAttribute('data-vis');
+    return el.classList.contains('friends-only-post') ? 'friends' : 'public';
+  }
+  function applyVisibility() {
+    var view = root.getAttribute('data-view'), aud = root.getAttribute('data-audience');
+    for (var i = detachedNodes.length - 1; i >= 0; i--) {   // re-attach the now-permitted
+      var d = detachedNodes[i];
+      if (canSee(visOf(d.node), view, aud)) { d.anchor.parentNode.replaceChild(d.node, d.anchor); detachedNodes.splice(i, 1); }
+    }
+    // Scope to the hand-authored profile panel only; the Posts tab is rendered
+    // (and audience-filtered) by renderPosts, the Guestbook tab is a clone.
+    document.querySelectorAll('#panel-profile [data-vis], #panel-profile .friends-only-post').forEach(function (el) {
+      if (el.parentNode && !canSee(visOf(el), view, aud)) {  // detach the now-restricted
+        var anchor = document.createComment('restricted'); el.parentNode.replaceChild(anchor, el);
+        detachedNodes.push({ node: el, anchor: anchor });
+      }
+    });
+  }
+
   /* ════════ View switcher ════════ */
   var viewBtns = document.querySelectorAll('[data-view-btn]');
   function setView(v) {
     root.setAttribute('data-view', v);
-    viewBtns.forEach(function (b) { b.toggleAttribute('data-selected', b.getAttribute('data-view-btn') === v); });
+    viewBtns.forEach(function (b) { var on = b.getAttribute('data-view-btn') === v; b.toggleAttribute('data-selected', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     if (v === 'edit') { setTab('profile'); enableDrag(true); } else { enableDrag(false); }
-    updateHint();
+    applyVisibility(); renderPosts(); updateHint();
   }
   viewBtns.forEach(function (b) { b.addEventListener('click', function () { setView(b.getAttribute('data-view-btn')); }); });
 
@@ -1299,8 +1336,8 @@ img { display:block; max-width:100%; }
   var audBtns = document.querySelectorAll('[data-aud-btn]');
   function setAudience(a) {
     root.setAttribute('data-audience', a);
-    audBtns.forEach(function (b) { b.toggleAttribute('data-selected', b.getAttribute('data-aud-btn') === a); });
-    updateHint();
+    audBtns.forEach(function (b) { var on = b.getAttribute('data-aud-btn') === a; b.toggleAttribute('data-selected', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    applyVisibility(); renderPosts(); updateHint();
   }
   audBtns.forEach(function (b) { b.addEventListener('click', function () { setAudience(b.getAttribute('data-aud-btn')); }); });
 
@@ -1330,8 +1367,9 @@ img { display:block; max-width:100%; }
   var tabBtns = document.querySelectorAll('.profile-header .tabs .tab');
   var panels = document.querySelectorAll('.tab-panel');
   function setTab(name) {
-    tabBtns.forEach(function (b) { b.toggleAttribute('data-selected', b.dataset.tab === name); });
+    tabBtns.forEach(function (b) { var on = b.dataset.tab === name; b.toggleAttribute('data-selected', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
     panels.forEach(function (p) { p.toggleAttribute('data-active', p.dataset.tab === name); });
+    if (name === 'guestbook') renderGuestbookTab();
   }
   tabBtns.forEach(function (b) {
     b.addEventListener('click', function () {
@@ -1388,7 +1426,7 @@ img { display:block; max-width:100%; }
   });
 
   /* ════════ Drag-to-reorder blocks (edit mode) ════════ */
-  var dragEl = null;
+  var dragEl = null, dragZone = null;
   function enableDrag(on) {
     document.querySelectorAll('#panel-profile .block').forEach(function (b) {
       if (b.classList.contains('profile-header')) return;
@@ -1406,17 +1444,24 @@ img { display:block; max-width:100%; }
     return closest.el;
   }
   document.addEventListener('dragstart', function (e) {
+    // Don't start a block drag from a form control — let the user select text.
+    if (e.target.closest('input, textarea, select')) { e.preventDefault(); return; }
     var b = e.target.closest('.block');
     if (!b || b.getAttribute('draggable') !== 'true') return;
     dragEl = b;
+    var z = b.closest('[data-dropzone]');
+    dragZone = z ? z.getAttribute('data-dropzone') : null;
     setTimeout(function () { b.classList.add('dragging'); }, 0);
     e.dataTransfer.effectAllowed = 'move';
     try { e.dataTransfer.setData('text/plain', ''); } catch (_) {}
   });
-  document.addEventListener('dragend', function () { if (dragEl) { dragEl.classList.remove('dragging'); dragEl = null; } });
+  document.addEventListener('dragend', function () { if (dragEl) { dragEl.classList.remove('dragging'); dragEl = null; dragZone = null; } });
   [].slice.call(document.querySelectorAll('#panel-profile .col, #fullZone')).forEach(function (zone) {
+    // Column blocks stay among columns; full-width blocks stay in the full-width zone.
+    zone.setAttribute('data-dropzone', zone.id === 'fullZone' ? 'full' : 'col');
     zone.addEventListener('dragover', function (e) {
       if (!dragEl) return;
+      if (dragZone && zone.getAttribute('data-dropzone') !== dragZone) return;  // no cross-zone drops
       e.preventDefault();
       var after = getAfter(zone, e.clientY);
       if (after == null) { if (dragEl.parentElement !== zone || zone.lastElementChild !== dragEl) zone.appendChild(dragEl); }
@@ -1443,7 +1488,14 @@ img { display:block; max-width:100%; }
   function renderWidgets(q) {
     q = (q || '').toLowerCase(); widgetGrid.innerHTML = '';
     var list = WIDGETS.filter(function (w) { return !q || w.n.toLowerCase().indexOf(q) > -1 || w.c.toLowerCase().indexOf(q) > -1; });
-    if (!list.length) { widgetGrid.innerHTML = '<div class="widget-empty">No blocks match “' + q + '”.</div>'; return; }
+    if (!list.length) {
+      widgetGrid.innerHTML = '';
+      var empty = document.createElement('div');
+      empty.className = 'widget-empty';
+      empty.textContent = 'No blocks match “' + q + '”.';   // textContent: no markup injection
+      widgetGrid.appendChild(empty);
+      return;
+    }
     list.forEach(function (w) {
       var card = document.createElement('button');
       card.className = 'widget-card'; card.dataset.name = w.n;
@@ -1464,13 +1516,39 @@ img { display:block; max-width:100%; }
   }
   document.querySelectorAll('.modal-tabs button').forEach(function (b) { b.addEventListener('click', function () { setMTab(b.dataset.mtab); }); });
 
-  function openModal() { renderWidgets(''); selectedWidget = null; footNote.textContent = 'Pick a widget to add, or switch to Layout to build a custom section.'; setMTab('widgets'); modal.setAttribute('data-open', ''); modal.setAttribute('aria-hidden', 'false'); }
-  function closeModal() { modal.removeAttribute('data-open'); modal.setAttribute('aria-hidden', 'true'); }
+  var modalReturnFocus = null;
+  function modalFocusables() {
+    return [].slice.call(modal.querySelectorAll('a[href],button:not([disabled]),input,textarea,select,[tabindex]:not([tabindex="-1"])'))
+      .filter(function (el) { return el.offsetParent !== null; });
+  }
+  function openModal() {
+    renderWidgets(''); selectedWidget = null;
+    footNote.textContent = 'Pick a widget to add, or switch to Layout to build a custom section.';
+    setMTab('widgets');
+    modalReturnFocus = document.activeElement;                 // remember the trigger
+    modal.setAttribute('data-open', ''); modal.setAttribute('aria-hidden', 'false');
+    var search = document.getElementById('widgetSearch');
+    setTimeout(function () { (search || modalFocusables()[0] || modal).focus(); }, 0);
+  }
+  function closeModal() {
+    modal.removeAttribute('data-open'); modal.setAttribute('aria-hidden', 'true');
+    if (modalReturnFocus && modalReturnFocus.focus) modalReturnFocus.focus();  // restore focus
+    modalReturnFocus = null;
+  }
   document.getElementById('addBlockBtn').addEventListener('click', openModal);
   document.getElementById('blockModalClose').addEventListener('click', closeModal);
   document.getElementById('blockModalCancel').addEventListener('click', closeModal);
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.hasAttribute('data-open')) closeModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (!modal.hasAttribute('data-open')) return;
+    if (e.key === 'Escape') { closeModal(); return; }
+    if (e.key === 'Tab') {                                     // keep focus inside the dialog
+      var f = modalFocusables(); if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
 
   /* Build a new profile block element */
   function newBlock(title, bodyHTML) {
@@ -1606,9 +1684,17 @@ img { display:block; max-width:100%; }
     var cls = p.vis === 'friends' ? 'card post friends-only-post' : 'card post';
     return '<article class="' + cls + '"><div class="post-author"><span class="avatar" data-size="lg" data-hue="purple">MO</span><span class="who"><span class="pname">Maya Okonkwo <span class="badge" data-tone="accent">✓</span></span><span class="ptime">' + p.time + '</span></span>' + badge + '</div><p class="post-text">' + p.text + '</p>' + img + '<div class="post-foot"><button class="post-action">♥ React</button><button class="post-action">Reply</button></div></article>';
   }
+  // Only the posts this viewer is allowed to see — the friends-only post is
+  // absent (not rendered) for strangers/followers, so pagination never counts it.
+  function visiblePosts() {
+    var view = root.getAttribute('data-view'), aud = root.getAttribute('data-audience');
+    return POSTS.filter(function (p) { return canSee(p.vis || 'public', view, aud); });
+  }
   function renderPosts() {
-    var total = Math.ceil(POSTS.length / PER);
-    var slice = POSTS.slice((page - 1) * PER, (page - 1) * PER + PER);
+    var list = visiblePosts();
+    var total = Math.max(1, Math.ceil(list.length / PER));
+    if (page > total) page = total;
+    var slice = list.slice((page - 1) * PER, (page - 1) * PER + PER);
     stream.innerHTML = slice.map(postHTML).join('');
     var h = '<button class="pg" data-nav="prev"' + (page === 1 ? ' disabled' : '') + '>‹</button>';
     for (var i = 1; i <= total; i++) h += '<button class="pg" data-page="' + i + '"' + (i === page ? ' data-on' : '') + '>' + i + '</button>';
@@ -1617,7 +1703,7 @@ img { display:block; max-width:100%; }
   }
   pagerEl.addEventListener('click', function (e) {
     var b = e.target.closest('.pg'); if (!b || b.disabled) return;
-    var total = Math.ceil(POSTS.length / PER);
+    var total = Math.max(1, Math.ceil(visiblePosts().length / PER));
     if (b.dataset.nav === 'prev') page = Math.max(1, page - 1);
     else if (b.dataset.nav === 'next') page = Math.min(total, page + 1);
     else page = parseInt(b.dataset.page, 10);
@@ -1630,16 +1716,34 @@ img { display:block; max-width:100%; }
   var PHOTOS = [['1', 'porto, kodak gold'], ['2', 'neon, night walk'], ['3', 'golden hour'], ['4', 'the park roll'], ['5', 'blue hour'], ['6', 'spring, expired film'], ['2', 'tram window'], ['3', 'market, 35mm'], ['1', 'harbour'], ['5', 'rooftop, dusk'], ['4', 'pines'], ['6', 'double exposure']];
   document.getElementById('photosTabGrid').innerHTML = PHOTOS.map(function (p) { return '<span class="photo" data-p="' + p[0] + '"><span class="tag">' + p[1] + '</span></span>'; }).join('');
 
-  /* ════════ Guestbook tab (clone the canonical guestbook) ════════ */
-  var gbSrc = document.getElementById('profileGuestbook');
-  if (gbSrc) {
+  /* ════════ Guestbook tab (fresh clone of the canonical guestbook on open) ════════ */
+  var gbTab = document.getElementById('guestbookTab');
+  function renderGuestbookTab() {
+    var gbSrc = document.getElementById('profileGuestbook');
+    if (!gbSrc || !gbTab) return;
+    gbTab.innerHTML = '';
     var gbClone = gbSrc.cloneNode(true);
     gbClone.removeAttribute('id');
     var eb = gbClone.querySelector('.block-editbar'); if (eb) eb.remove();
     var rh = gbClone.querySelector('.resize-handle'); if (rh) rh.remove();
-    document.getElementById('guestbookTab').appendChild(gbClone);
+    gbTab.appendChild(gbClone);
   }
 
+  // Seed each char-count from its actual textarea content (no hardcoded mismatch).
+  document.querySelectorAll('.gb-composer').forEach(function (comp) {
+    var ta = comp.querySelector('.gb-input'), cnt = comp.querySelector('.gb-count');
+    if (ta && cnt) cnt.textContent = ta.value.length;
+  });
+
+  // Keep the edit-toolbar's sticky offset in sync with the demo-bar's real
+  // height, so a wrapped demo-bar on narrow screens can't overlap it.
+  var demoBar = document.querySelector('.demo-bar');
+  function syncStickyOffset() { if (demoBar) root.style.setProperty('--demo-bar-h', demoBar.offsetHeight + 'px'); }
+  if (window.ResizeObserver && demoBar) new ResizeObserver(syncStickyOffset).observe(demoBar);
+  window.addEventListener('resize', syncStickyOffset);
+  syncStickyOffset();
+
+  applyVisibility();
   updateHint();
 })();
 </script>

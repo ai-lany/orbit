@@ -206,7 +206,7 @@ The following are explicitly out of scope for v1. Each is a deliberate deferral,
 - Contact sync permission request with a plain-language explanation of what data is used and how before the OS permission dialog appears.
 - Explicit skip option — contact sync is never mandatory.
 - On-device phone number hashing before any data leaves the device. Raw contact data is never transmitted to Orbit servers.
-- Server-side match against hashed phone numbers registered on Orbit accounts. Hashes are discarded immediately after matching — not stored.
+- Server-side match against hashed phone numbers registered on Orbit accounts. The **uploaded contact hashes** are used only for the match query and discarded immediately afterward — never stored. (The one phone-number hash Orbit does persist is the user's *own* account hash, which is what the query matches against; see the Architecture Notes.)
 - Results presented as a manually selectable list: user taps who they want to follow. No auto-following.
 - Unmatched contacts can be invited via the user's native SMS app (pre-filled message, sent by the user — Orbit does not send SMS programmatically).
 - Re-sync available from Settings at any time.
@@ -281,6 +281,8 @@ The following are explicitly out of scope for v1. Each is a deliberate deferral,
 - Undo/redo in the editor.
 
 #### Tier 3 — Code Editing
+
+> **Superseded by v2 — see [`orbit-prd-v2.md`](./orbit-prd-v2.md) §5 and §8.3.** Raw HTML/CSS code editing is **not** being built. v2 reframes Tier 3 as a constrained, component-only *profile template language* (never raw code); raw HTML/CSS editing is now a **permanent non-goal**, not a deferral. The note below is retained for historical context only. Do not plan work against it.
 
 **Deferred to v2.** Not in scope for v1. Architecture should not preclude it — profiles must be rendered in sandboxed iframes from day one so Tier 3 can be introduced without a rendering rearchitecture.
 

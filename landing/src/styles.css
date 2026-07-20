@@ -15,7 +15,9 @@
 
   /* App-level surface ladder — the page warms downward with color, not just
      lightness. Defined per theme so the whole story flips as one. These are the
-     light-mode values (the default). Deliberate primitive→alias, used only here. */
+     light-mode values; the app ships dark by default (see index.html), and the
+     [data-theme="dark"] block below overrides them. Deliberate primitive→alias,
+     used only here. */
   --landing-space:   color-mix(in srgb, var(--accent-50) 40%, var(--gray-0));   /* pale day-sky   */
   --landing-surface: var(--gray-0);                                             /* clean white     */
   --landing-warm:    color-mix(in srgb, var(--amber-100) 55%, var(--gray-0));   /* warm cork paper */
@@ -88,6 +90,8 @@ body {
   position: relative;   /* paint above the fixed pulsar */
   z-index: 1;
   padding: clamp(var(--space-8), 12vh, 7rem) clamp(var(--space-5), 4vw, var(--space-7));
+  /* Offset in-page jumps (nav links, scrollToId) so headings clear the sticky nav. */
+  scroll-margin-top: calc(var(--control-height-md) + var(--space-4) * 2);
 }
 .wrap { width: 100%; max-width: 72rem; margin: 0 auto; }
 
@@ -433,125 +437,6 @@ body {
   line-height: var(--leading-normal);
 }
 
-/* ══ FRIENDS, NOT FOLLOWERS — the model + the chronological feed ════════════ */
-.friendsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(var(--space-6), 5vw, var(--space-8));
-  margin-top: var(--space-7);
-  align-items: center;
-}
-.steps { display: flex; flex-direction: column; gap: var(--space-3); }
-.step {
-  display: flex; align-items: center; gap: var(--space-4);
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-subtle);
-}
-.stepText strong { display: block; font-weight: var(--weight-semibold); }
-.stepText span { font-size: var(--text-sm); color: var(--color-fg-muted); }
-.stepArrow { display: flex; justify-content: center; color: var(--color-accent); }
-.unlock {
-  margin-top: var(--space-2);
-  padding: var(--space-4);
-  border: 1px dashed var(--color-border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--color-accent-subtle);
-  font-size: var(--text-sm);
-  line-height: var(--leading-loose);
-  color: var(--color-fg);
-}
-.unlock strong { font-weight: var(--weight-semibold); }
-
-.feed {
-  background: var(--color-bg-subtle);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-}
-.feedHead {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--color-border);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-fg-subtle);
-}
-.post { display: flex; gap: var(--space-3); padding: var(--space-4); border-bottom: 1px solid var(--color-border); }
-.postBody { flex: 1; min-width: 0; }
-.postMeta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.postName { font-size: var(--text-sm); font-weight: var(--weight-medium); }
-.postTime { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-fg-subtle); }
-.postText { margin-top: 4px; font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--color-fg); }
-.feedEnd {
-  padding: var(--space-5);
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-fg-subtle);
-}
-
-/* ══ PRIVATE BY DEFAULT — trust cards ═══════════════════════════════════════ */
-.cardGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-5);
-  margin-top: var(--space-7);
-}
-.featIcon {
-  display: inline-flex;
-  padding: 10px;
-  border-radius: var(--radius-md);
-  background: var(--color-accent-subtle);
-  color: var(--color-accent);
-}
-.featTitle {
-  font-family: var(--font-display);
-  font-weight: var(--weight-semibold);
-  font-size: var(--text-lg);
-  margin: var(--space-4) 0 var(--space-2);
-}
-.featBody { font-size: var(--text-sm); line-height: var(--leading-loose); color: var(--color-fg-muted); }
-
-/* ══ PRICING — free forever, fancy if you want ══════════════════════════════ */
-.priceGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-5);
-  margin-top: var(--space-7);
-  align-items: start;
-}
-.plan { height: 100%; }
-.plan--plus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 1px var(--color-accent),
-              0 20px 60px -20px color-mix(in srgb, var(--color-accent) 60%, transparent);
-}
-.planTop { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
-.planName {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-fg-subtle);
-}
-.planPrice { margin: var(--space-4) 0 var(--space-2); font-family: var(--font-display); }
-.planPrice b { font-size: var(--text-3xl); font-weight: var(--weight-semibold); letter-spacing: -0.02em; }
-.planPrice span { color: var(--color-fg-subtle); font-size: var(--text-sm); }
-.planNote { font-size: var(--text-sm); color: var(--color-fg-muted); }
-.planList { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; gap: var(--space-3); }
-.planList li { display: flex; align-items: flex-start; gap: var(--space-3); font-size: var(--text-sm); line-height: var(--leading-normal); }
-.planList svg { color: var(--color-accent); flex: none; margin-top: 3px; }
-.priceFoot {
-  margin-top: var(--space-6);
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-fg-muted);
-}
-
 /* ══ CTA / EARLY ACCESS ═════════════════════════════════════════════════════ */
 .cta { text-align: center; }
 .ctaInner { max-width: 42rem; margin: 0 auto; }
@@ -664,7 +549,6 @@ body {
 .copy > :nth-child(3) { animation-delay: 280ms; }
 .copy > :nth-child(4) { animation-delay: 380ms; }
 .copy > :nth-child(5) { animation-delay: 480ms; }
-.copy > :nth-child(6) { animation-delay: 560ms; }
 
 .pulsar {
   opacity: 0;
@@ -682,15 +566,10 @@ body {
 
 /* ── Responsive ────────────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
-  .makeGrid,
-  .friendsGrid { grid-template-columns: 1fr; }
+  .makeGrid { grid-template-columns: 1fr; }
 }
 @media (max-width: 860px) {
   .antimetric { grid-template-columns: 1fr 1fr; gap: var(--space-7) var(--space-5); }
-  .cardGrid   { grid-template-columns: 1fr; }
-}
-@media (max-width: 760px) {
-  .priceGrid { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
   /* keep just the buttons on phones — the extra specificity clears the

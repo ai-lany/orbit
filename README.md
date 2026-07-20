@@ -16,6 +16,14 @@ This is a monorepo. Each directory is an independent package worked on separatel
 
 ## Getting started
 
+`Design-System/` and `templating-language/` are git submodules, so clone with them:
+
+```bash
+git clone --recurse-submodules <repo-url>
+# already cloned without them? then:
+git submodule update --init
+```
+
 ### Design-System
 
 ```bash
